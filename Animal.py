@@ -1,15 +1,48 @@
 from pico2d import load_image
 
-image_front = [
-    'Animals/Chicken/front.png',
-    "Animals/Rabbit/front.png",
+# 0-front, 1-back, 2-left, 3-right
+# route1 - 3까지, route2 - 4부터 8까지
+image_dirs = [
+    ["Animals/Chicken/front.png",
     "Animals/Duck/front.png",
-    "Animals/Sheep/front.png",
     "Animals/Penguin/front.png",
-    "Animals/Cow/front.png",
     "Animals/Ostrich/front.png",
+    "Animals/Rabbit/front.png",
+    "Animals/Sheep/front.png",
+    "Animals/Cow/front.png",
     "Animals/Horse/front.png",
-    "Animals/Unicon/front.png",
+    "Animals/Unicon/front.png"
+    ],
+    ["Animals/Chicken/back.png",
+    "Animals/Duck/back.png",
+    "Animals/Penguin/back.png",
+    "Animals/Ostrich/back.png",
+    "Animals/Rabbit/back.png",
+    "Animals/Sheep/back.png",
+    "Animals/Cow/back.png",
+    "Animals/Horse/back.png",
+    "Animals/Unicon/back.png"
+        ],
+    ["Animals/Chicken/left.png",
+    "Animals/Duck/left.png",
+    "Animals/Penguin/left.png",
+    "Animals/Ostrich/left.png",
+    "Animals/Rabbit/left.png",
+    "Animals/Sheep/left.png",
+    "Animals/Cow/left.png",
+    "Animals/Horse/left.png",
+    "Animals/Unicon/left.png"
+    ],
+    ["Animals/Chicken/right.png",
+    "Animals/Duck/right.png",
+    "Animals/Penguin/right.png",
+    "Animals/Ostrich/right.png",
+    "Animals/Rabbit/right.png",
+    "Animals/Sheep/right.png",
+    "Animals/Cow/right.png",
+    "Animals/Horse/right.png",
+    "Animals/Unicon/right.png"
+    ]
 ]
 
 class Animal:
