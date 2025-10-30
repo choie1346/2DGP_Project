@@ -72,6 +72,7 @@ def right_up(e):
 class run:
     def __init__(self, animal):
         self.animal = animal
+        self.frame_time = 0
 
     def enter(self, e):
         if down_down(e):
@@ -88,7 +89,10 @@ class run:
         self.animal.image = load_image(image_dirs[self.animal.dir][self.animal.current])
 
     def do(self):
-        self.animal.frame = (self.animal.frame + 1) % 4
+        self.frame_time += 0.01
+        if self.frame_time > 0.1:
+            self.animal.frame = (self.animal.frame + 1) % 4
+            self.frame_time = 0
 
     def draw(self):
         self.animal.image.clip_draw(self.animal.frame * 80, 0, 80, 80, self.animal.x, self.animal.y, 300, 300)
