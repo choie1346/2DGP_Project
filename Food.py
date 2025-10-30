@@ -17,28 +17,28 @@ image =[
 
 class Food:
     def __init__(self):
-        self.x, self.y = randrange(50, 950 + 1), randrange(50, 750 + 1)
+        self.x, self.y = randrange(50, 950 + 1), randrange(50, 650 + 1)
         self.size = 0
         self.current = 0
-        self.Creating = True
+        self.creating = True
         self.image = load_image(image[0])
 
     def update(self):
-        if self.Creating:
-            self.Craete()
+        if self.creating:
+            self.craete()
 
     def draw(self):
         self.image.clip_draw(0, 0, 64, 64, self.x, self.y, self.size, self.size)
 
-    def Craete(self):
+    def craete(self):
         self.size += 5
         if self.size >= 50:
-            self.Creating = False
+            self.creating = False
 
-    def Upgrade(self):
+    def upgrade(self):
         if self.current >= 9:
             return
         self.current += 1
         self.image = load_image(image[self.current])
-        self.Creating = True
+        self.creating = True
         self.size = 0

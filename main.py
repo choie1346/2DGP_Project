@@ -1,10 +1,11 @@
 from pico2d import *
+from Interface import Background
 from Animal import Animal
 from Food import Food
 from sdl2 import SDL_KEYDOWN, SDLK_m
 # Game object class here
 WIDTH = 1000
-HEIGHT = 800
+HEIGHT = 700
 
 count_food = 50
 
@@ -14,7 +15,7 @@ def handle_events():
         animal.handle_event(event)
         if event.type == SDL_KEYDOWN and event.key == SDLK_m:
             for i in range(count_food):
-                food[i].Upgrade()
+                food[i].upgrade()
     pass
 
 
@@ -31,6 +32,7 @@ def update_world():
 
 def render_world():
     clear_canvas()
+    background.draw()
     #animal.draw()
     for i in range(count_food):
         food[i].draw()
@@ -39,9 +41,9 @@ def render_world():
 
 
 open_canvas(WIDTH, HEIGHT)
+background = Background()
 animal = Animal()
 food = []
-
 for i in range(count_food):
     food.append(Food())
 # game loop
