@@ -1,7 +1,7 @@
 from pico2d import *
 
 import game_world
-from Interface import Background
+from Interface import Background, startUI
 from Animal import Animal
 from Food import Food
 from sdl2 import SDL_KEYDOWN, SDLK_m
@@ -23,11 +23,16 @@ def handle_events():
 
 
 def reset_world():
-    global food, background, animal
+    global food, background, animal, startUI
 
     background = Background()
     game_world.add_object(background, 0)
     game_world.add_object(background, 1)
+
+    startui = startUI()
+    game_world.add_object(startui, 0)
+
+
 
     animal = Animal()
     game_world.add_object(animal, 1)
