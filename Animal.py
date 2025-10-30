@@ -1,6 +1,6 @@
 from pico2d import load_image
 from state_machine import StateMachine
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_n
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n
 
 # 0-front, 1-back, 2-left, 3-right
 # route1 - 3까지, route2 - 4부터 8까지
@@ -52,24 +52,45 @@ def space_down(e):
 def key_n(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_n
 
-def right_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
-def right_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
+def up_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
+def up_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_UP
+def down_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
+def down_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 def left_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
+def right_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
+def right_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
 
-class front:
+
+class run:
     def __init__(self, animal):
         self.animal = animal
 
     def enter(self, e):
-        self.animal.image = load_image(image_dirs[0][self.animal.current])
+        if down_down(e):
+            self.animal.dir = 0
+        elif up_down(e):
+            self.animal.dir = 1
+        elif left_down(e):
+            self.animal.dir = 2
+        elif right_down(e):
+            self.animal.dir = 3
+
+        self.animal.image = load_image(image_dirs[self.animal.dir][self.animal.current])
 
     def do(self):
         self.animal.frame = (self.animal.frame + 1) % 4
+
+    def draw(self):
+        self.animal.image.clip_draw(self.animal.frame * 80, 0, 80, 80, self.animal.x, self.animal.y, 300, 300)
 
     def exit(self, e):
         pass
@@ -80,12 +101,13 @@ class Animal:
         self.route = 1
         self.current = 0
         self.frame = 0
+        self.dir = 0
         #self.image = load_image('Animals/Chicken/front.png') # Chicken
-        self.FRONT = front(self)
+        self.RUN = run(self)
         self.state_machine = StateMachine(
-            self.FRONT,  # initial state
+            self.RUN,  # initial state
             {
-                self.FRONT: {}
+                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN}
             }
         )
     def update(self):
@@ -93,8 +115,8 @@ class Animal:
         pass
 
     def draw(self):
-        self.image.clip_draw(self.frame * 80, 0, 80, 80, self.x, self.y, 300, 300)
+        self.state_machine.draw()
         pass
 
     def handle_event(self, event):
-        pass
+        self.state_machine.handle_state_event(('INPUT', event))
