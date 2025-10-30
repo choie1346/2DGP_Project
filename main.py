@@ -1,9 +1,11 @@
 from pico2d import *
 from Animal import Animal
+from Food import Food
 # Game object class here
+WIDTH = 1000
+HEIGHT = 800
 
-# animal = Animal()
-
+count_food = 50
 
 def handle_events():
     event_list = get_events()
@@ -18,19 +20,26 @@ def reset_world():
 
 
 def update_world():
-    animal.update()
-    pass
+    #animal.update()
+    for i in range(count_food):
+        food[i].update()
 
 
 def render_world():
     clear_canvas()
-    animal.draw()
+    #animal.draw()
+    for i in range(count_food):
+        food[i].draw()
     update_canvas()
 
 
 
-open_canvas()
+open_canvas(WIDTH, HEIGHT)
 animal = Animal()
+food = []
+
+for i in range(count_food):
+    food.append(Food())
 # game loop
 while True:
     handle_events()
