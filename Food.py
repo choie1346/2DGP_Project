@@ -1,6 +1,6 @@
-from pico2d import load_image
+from pico2d import load_image, get_events
 from random import randrange
-from state_machine import StateMachine
+from sdl2 import SDL_KEYDOWN, SDLK_m
 
 image =[
     "Items/foods/level1f.png",
@@ -19,6 +19,7 @@ class Food:
     def __init__(self):
         self.x, self.y = randrange(50, 950 + 1), randrange(50, 750 + 1)
         self.size = 0
+        self.current = 0
         self.Creating = True
         self.image = load_image(image[0])
 
@@ -33,3 +34,11 @@ class Food:
         self.size += 5
         if self.size >= 50:
             self.Creating = False
+
+    def Upgrade(self):
+        if self.current >= 9:
+            return
+        self.current += 1
+        self.image = load_image(image[self.current])
+        self.Creating = True
+        self.size = 0
