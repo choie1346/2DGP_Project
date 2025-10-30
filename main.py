@@ -1,10 +1,9 @@
 from pico2d import *
 from Animal import *
-
-
 # Game object class here
 
-animal = Animal()
+# animal = Animal()
+
 
 def handle_events():
     # event_list = get_events()
@@ -31,11 +30,12 @@ def render_world():
 
 
 open_canvas()
+animal = Animal()
 # game loop
 while True:
     handle_events()
     update_world()
     render_world()
-    delay(0.01)
+    delay(0.1)
 # finalization code
 close_canvas()
