@@ -69,7 +69,6 @@ def right_down(e):
 def right_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
 
-
 class run:
     def __init__(self, animal):
         self.animal = animal
@@ -83,6 +82,8 @@ class run:
             self.animal.dir = 2
         elif right_down(e):
             self.animal.dir = 3
+        elif key_n(e):
+            self.animal.current = (self.animal.current + 1) % len(image_dirs[0])
 
         self.animal.image = load_image(image_dirs[self.animal.dir][self.animal.current])
 
@@ -102,21 +103,19 @@ class Animal:
         self.current = 0
         self.frame = 0
         self.dir = 0
-        #self.image = load_image('Animals/Chicken/front.png') # Chicken
         self.RUN = run(self)
         self.state_machine = StateMachine(
             self.RUN,  # initial state
             {
-                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN}
+                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN, key_n: self.RUN}
             }
         )
+
     def update(self):
         self.state_machine.update()
-        pass
 
     def draw(self):
         self.state_machine.draw()
-        pass
 
     def handle_event(self, event):
         self.state_machine.handle_state_event(('INPUT', event))
