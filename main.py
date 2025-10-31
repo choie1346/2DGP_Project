@@ -1,6 +1,6 @@
 from pico2d import *
 
-from common import *
+import common
 import game_world
 from Interface import Background, startUI
 from Animal import Animal
@@ -18,7 +18,7 @@ def handle_events():
         if event.type == SDL_KEYDOWN and event.key == SDLK_m:
             for i in range(count_food):
                 food[i].upgrade()
-        if event.type == SDL_MOUSEMOTION or event.type == SDL_BUTTON_LEFT:
+        if event.type == SDL_MOUSEMOTION or event.type == SDL_MOUSEBUTTONDOWN:
             startui.handle_event(event)
 
 
@@ -47,12 +47,12 @@ def update_world():
 
 def render_world():
     clear_canvas()
-    game_world.render(stage)
+    game_world.render(common.stage)
     update_canvas()
 
 
 
-open_canvas(WIDTH, HEIGHT)
+open_canvas(common.WIDTH, common.HEIGHT)
 reset_world()
 # game loop
 while True:

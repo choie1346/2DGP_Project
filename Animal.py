@@ -1,6 +1,8 @@
 from pico2d import load_image
 from state_machine import StateMachine
+import game_world
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n
+from common import stage
 
 # 0-front, 1-back, 2-left, 3-right
 # route1 - 3까지, route2 - 4부터 8까지

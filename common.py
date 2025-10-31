@@ -6,3 +6,4 @@ stage = 0
 def change_stage(new_stage):
     global stage
     stage = new_stage
+    print("Stage changed to:", stage)

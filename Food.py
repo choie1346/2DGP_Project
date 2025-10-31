@@ -1,5 +1,7 @@
 from pico2d import load_image, get_events
 from random import randrange
+from common import stage
+import game_world
 from sdl2 import SDL_KEYDOWN, SDLK_m
 
 image =[

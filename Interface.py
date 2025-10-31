@@ -22,9 +22,6 @@ class startUI:
         pass
 
     def handle_event(self, event):
-        if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
-            change_stage(1)
-
         if event.type == SDL_MOUSEMOTION:
             event.y = y_transformation(event.y)
             if 400 <= event.x <= 600 and 100 <= event.y <= 200:
@@ -35,7 +32,11 @@ class startUI:
                 if self.push_button:
                     self.push_button = False
                     self.start_button = load_image("Graphic/start_button.png")
-
+        elif event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
+            event.y = y_transformation(event.y)
+            if 400 <= event.x <= 600 and 100 <= event.y <= 200:
+                print("click")
+                change_stage(1)
 
 
 
