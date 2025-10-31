@@ -2,7 +2,7 @@ from pico2d import load_image
 from state_machine import StateMachine
 import game_world
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n
-from common import stage
+from common import STAGE
 
 # 0-front, 1-back, 2-left, 3-right
 # route1 - 3까지, route2 - 4부터 8까지
@@ -97,7 +97,7 @@ class run:
             self.frame_time = 0
 
     def draw(self):
-        self.animal.image.clip_draw(self.animal.frame * 80, 0, 80, 80, self.animal.x, self.animal.y, 300, 300)
+        self.animal.image.clip_draw(self.animal.frame * 80, 0, 80, 80, self.animal.x, self.animal.y, self.animal.size, self.animal.size)
 
     def exit(self, e):
         pass
@@ -109,6 +109,7 @@ class Animal:
         self.current = 0
         self.frame = 0
         self.dir = 0
+        self.size = 200
         self.RUN = run(self)
         self.state_machine = StateMachine(
             self.RUN,  # initial state

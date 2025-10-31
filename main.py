@@ -9,7 +9,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_m
 # Game object class here
 
 
-count_food = 50
+count_food = 10
 
 def handle_events():
     event_list = get_events()
@@ -25,29 +25,29 @@ def handle_events():
 def reset_world():
     global food, background, animal, startui
 
+    # stage == 0
     background = Background()
     game_world.add_object(background, 0)
-    game_world.add_object(background, 1)
 
     startui = startUI()
     game_world.add_object(startui, 0)
 
 
-
-    animal = Animal()
-    game_world.add_object(animal, 1)
+    # stage == 1
+    game_world.add_object(background, 1)
     food = []
     for i in range(count_food):
         food.append(Food())
         game_world.add_object(food[i], 1)
-
+    animal = Animal()
+    game_world.add_object(animal, 1)
 
 def update_world():
     game_world.update()
 
 def render_world():
     clear_canvas()
-    game_world.render(common.stage)
+    game_world.render(common.STAGE)
     update_canvas()
 
 

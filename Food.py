@@ -1,6 +1,6 @@
 from pico2d import load_image, get_events
 from random import randrange
-from common import stage
+from common import STAGE
 import game_world
 from sdl2 import SDL_KEYDOWN, SDLK_m
 
@@ -19,7 +19,7 @@ image =[
 
 class Food:
     def __init__(self):
-        self.x, self.y = randrange(50, 950 + 1), randrange(50, 650 + 1)
+        self.x, self.y = randrange(30, 750 + 1), randrange(100, 500 + 1)
         self.size = 0
         self.current = 0
         self.creating = True
