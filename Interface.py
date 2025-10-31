@@ -1,9 +1,17 @@
-from pico2d import load_image
+from pico2d import load_image, get_events
+from sdl2 import SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT
+from common import *
+
+def y_transformation(y):
+    y = HEIGHT - y
+    return y
+
 
 class startUI:
     def __init__(self):
         self.logo = load_image("Graphic/logo.png")
         self.start_button = load_image("Graphic/start_button.png")
+        self.push_button = False
 
     def draw(self):
         self.logo.clip_draw(0, 0, 500, 500, 500, 450, 400, 400)
@@ -12,6 +20,26 @@ class startUI:
 
     def update(self):
         pass
+
+    def handle_event(self, event):
+        if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
+            change_stage(1)
+
+        if event.type == SDL_MOUSEMOTION:
+            event.y = y_transformation(event.y)
+            if 400 <= event.x <= 600 and 100 <= event.y <= 200:
+                if not self.push_button:
+                    self.push_button = True
+                    self.start_button = load_image("Graphic/start_button_push.png")
+            else:
+                if self.push_button:
+                    self.push_button = False
+                    self.start_button = load_image("Graphic/start_button.png")
+
+
+
+
+
 
 class Background:
     def __init__(self):

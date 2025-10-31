@@ -1,16 +1,14 @@
 from pico2d import *
 
+from common import *
 import game_world
 from Interface import Background, startUI
 from Animal import Animal
 from Food import Food
 from sdl2 import SDL_KEYDOWN, SDLK_m
 # Game object class here
-WIDTH = 1000
-HEIGHT = 700
 
-# 0-start, 1-in game
-stage = 0
+
 count_food = 50
 
 def handle_events():
@@ -20,10 +18,12 @@ def handle_events():
         if event.type == SDL_KEYDOWN and event.key == SDLK_m:
             for i in range(count_food):
                 food[i].upgrade()
+        if event.type == SDL_MOUSEMOTION or event.type == SDL_BUTTON_LEFT:
+            startui.handle_event(event)
 
 
 def reset_world():
-    global food, background, animal, startUI
+    global food, background, animal, startui
 
     background = Background()
     game_world.add_object(background, 0)

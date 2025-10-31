@@ -22,4 +22,4 @@ class StateMachine:
                 self.cur_state = self.next_state
                 return
 
-        print(f'처리되지 않은 이벤트 {event_to_string(state_event)}가 발생.')
+        #print(f'처리되지 않은 이벤트 {event_to_string(state_event)}가 발생.')
