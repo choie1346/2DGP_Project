@@ -1,3 +1,4 @@
+
 from pico2d import load_image, get_events
 from random import randrange
 from common import STAGE
@@ -38,9 +39,7 @@ class Food:
             self.creating = False
 
     def upgrade(self):
-        if self.current >= 9:
-            return
-        self.current += 1
+        self.current = (self.current + 1) % len(image)
         self.image = load_image(image[self.current])
         self.creating = True
         self.size = 0
