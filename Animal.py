@@ -77,20 +77,51 @@ class run:
         self.frame_time = 0
 
     def enter(self, e):
+        # 키 누름 - 새로운 방향으로 전환 (이전 방향 무시)
         if down_down(e):
             self.animal.dir = 0
+            self.animal.velocity_x = 0
+            self.animal.velocity_y = -1
+            self.animal.current_key = SDLK_DOWN
         elif up_down(e):
             self.animal.dir = 1
+            self.animal.velocity_x = 0
+            self.animal.velocity_y = 1
+            self.animal.current_key = SDLK_UP
         elif left_down(e):
             self.animal.dir = 2
+            self.animal.velocity_x = -1
+            self.animal.velocity_y = 0
+            self.animal.current_key = SDLK_LEFT
         elif right_down(e):
             self.animal.dir = 3
+            self.animal.velocity_x = 1
+            self.animal.velocity_y = 0
+            self.animal.current_key = SDLK_RIGHT
+        # 키 뗌 - 현재 누르고 있는 키를 뗐을 때만 멈춤
+        elif down_up(e) and self.animal.current_key == SDLK_DOWN:
+            self.animal.velocity_y = 0
+            self.animal.current_key = None
+        elif up_up(e) and self.animal.current_key == SDLK_UP:
+            self.animal.velocity_y = 0
+            self.animal.current_key = None
+        elif left_up(e) and self.animal.current_key == SDLK_LEFT:
+            self.animal.velocity_x = 0
+            self.animal.current_key = None
+        elif right_up(e) and self.animal.current_key == SDLK_RIGHT:
+            self.animal.velocity_x = 0
+            self.animal.current_key = None
         elif key_n(e):
             self.animal.current = (self.animal.current + 1) % len(image_dirs[0])
 
         self.animal.image = load_image(image_dirs[self.animal.dir][self.animal.current])
 
     def do(self):
+        # 이동 처리
+        self.animal.x += self.animal.velocity_x * self.animal.speed
+        self.animal.y += self.animal.velocity_y * self.animal.speed
+
+        # 애니메이션 프레임 업데이트
         self.frame_time += 0.01
         if self.frame_time > 0.1:
             self.animal.frame = (self.animal.frame + 1) % 4
@@ -100,7 +131,8 @@ class run:
         self.animal.image.clip_draw(self.animal.frame * 80, 0, 80, 80, self.animal.x, self.animal.y, self.animal.size, self.animal.size)
 
     def exit(self, e):
-        pass
+        self.animal.velocity_x = 0
+        self.animal.velocity_y = 0
 
 class Animal:
     def __init__(self):
@@ -110,11 +142,15 @@ class Animal:
         self.frame = 0
         self.dir = 0
         self.size = 200
+        self.speed = 5  # 이동 속도
+        self.velocity_x = 0  # X 방향 속도
+        self.velocity_y = 0  # Y 방향 속도
         self.RUN = run(self)
         self.state_machine = StateMachine(
             self.RUN,  # initial state
             {
-                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN, key_n: self.RUN}
+                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN, key_n: self.RUN,
+                           up_up: self.RUN, down_up: self.RUN, left_up: self.RUN, right_up: self.RUN}
             }
         )
 
