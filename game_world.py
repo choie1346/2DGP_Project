@@ -24,11 +24,11 @@ def remove_object(o):
     print('월드에 존재하지 않은 객체를 삭제하려고 합니다.')
 
 def collide(a, b):
-    leftA, bottomA, rigntA, topA = a.get_bb()
-    leftB, bottomB, rigntB, topB = b.get_bb()
+    leftA, bottomA, rightA, topA = a.get_bb()
+    leftB, bottomB, rightB, topB = b.get_bb()
 
-    if leftA > rigntB: return False
-    if rigntA < leftB: return False
+    if leftA > rightB: return False
+    if rightA < leftB: return False
     if topA < bottomB: return False
     if bottomA > topB: return False
 

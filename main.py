@@ -42,8 +42,13 @@ def reset_world():
     animal = Animal()
     game_world.add_object(animal, 1)
 
+    game_world.add_collision_pair('animal:food', animal, None)
+    for f in food:
+        game_world.add_collision_pair('animal:food', None, f)
+
 def update_world():
     game_world.update()
+    game_world.handle_collision()
 
 def render_world():
     clear_canvas()

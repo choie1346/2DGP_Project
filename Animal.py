@@ -166,3 +166,8 @@ class Animal:
 
     def get_bb(self):
         return self.x - 40, self.y - 120, self.x + 40, self.y - 40
+
+    def handle_collision(self, group, other):
+        if group == 'animal:food':
+            self.size += 5
+            print(f'size up: {self.size}')
