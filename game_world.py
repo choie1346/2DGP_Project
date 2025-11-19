@@ -22,3 +22,44 @@ def remove_object(o):
             return
 
     print('월드에 존재하지 않은 객체를 삭제하려고 합니다.')
+
+def collide(a, b):
+    leftA, bottomA, rigntA, topA = a.get_bb()
+    leftB, bottomB, rigntB, topB = b.get_bb()
+
+    if leftA > rigntB: return False
+    if rigntA < leftB: return False
+    if topA < bottomB: return False
+    if bottomA > topB: return False
+
+    return True
+
+
+    return None
+
+collision_pairs = {} #key: 충돌종류 value: [[a], [b]]
+
+def add_collision_pair(group, a, b):
+    if group not in collision_pairs:
+        print('새로운 그룹 추가')
+        collision_pairs[group] = [[], []]
+    if a:
+        collision_pairs[group][0].append(a)
+    if b:
+        collision_pairs[group][1].append(b)
+
+
+def handle_collision():
+    for group, pairs in collision_pairs.items():
+        for a in pairs[0]:
+            for b in pairs[1]:
+                if collide(a, b):
+                    a.handle_collision(group, b)
+                    b.handle_collision(group, a)
+
+def remove_collision_object(o):
+    for pairs in collision_pairs.values():
+        if o in pairs[0]:
+            pairs[0].remove(o)
+        if o in pairs[1]:
+            pairs[1].remove(o)
