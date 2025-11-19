@@ -1,5 +1,5 @@
 
-from pico2d import load_image, get_events
+from pico2d import load_image, get_events, draw_rectangle
 from random import randrange
 from common import STAGE
 import game_world
@@ -32,6 +32,7 @@ class Food:
 
     def draw(self):
         self.image.clip_draw(0, 0, 64, 64, self.x, self.y, self.size, self.size)
+        draw_rectangle(*self.get_bb())
 
     def craete(self):
         self.size += 5
@@ -43,3 +44,6 @@ class Food:
         self.image = load_image(image[self.current])
         self.creating = True
         self.size = 0
+
+    def get_bb(self):
+        return self.x - self.size / 2, self.y - self.size / 2, self.x + self.size / 2, self.y + self.size / 2
