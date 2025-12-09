@@ -82,6 +82,11 @@ class run:
         self.frame_time = 0
 
     def enter(self, e):
+        # E키 눌렀을 때 퀘스트 완료 시도
+        if key_e(e):
+            self.animal.try_complete_quest()
+            return
+
         # 키 누름 - 해당 방향의 상태만 업데이트
         if down_down(e):
             self.animal.key_down_pressed = True
@@ -168,11 +173,14 @@ class Animal:
         self.key_left_pressed = False
         self.key_right_pressed = False
 
+        # 충돌 중인 farmer 저장
+        self.colliding_farmer = None
+
         self.RUN = run(self)
         self.state_machine = StateMachine(
             self.RUN,  # initial state
             {
-                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN, key_n: self.RUN,
+                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN, key_n: self.RUN, key_e: self.RUN,
                            up_up: self.RUN, down_up: self.RUN, left_up: self.RUN, right_up: self.RUN}
             }
         )
@@ -210,6 +218,7 @@ class Animal:
         return self.x - half_width, self.y - bottom_offset+ 20, self.x + half_width, self.y - top_offset
 
     def handle_collision(self, group, other):
+        print(f"충돌 감지! group: {group}")
         if group == 'animal:food':
             food = game_world.get_one_object_by_type(Food)
             self.size += (food.current + 1)
@@ -218,19 +227,30 @@ class Animal:
             if randint(0, 100) < common.COIN_SPAWN_PROBABILITY:
                 common.coin_number += 10
         elif group == 'animal:farmer':
-            # Farmer와 충돌 중일 때 저장
-            if key_e:
-                # self.colliding_farmer = other
-                self.try_complete_quest()
+            print("Farmer와 충돌! colliding_farmer 저장")
+            self.colliding_farmer = other
+            print(f"저장된 farmer 상태: {other.state}")
 
     def try_complete_quest(self):
-        if hasattr(self, 'colliding_farmer') and self.colliding_farmer:
-            farmer = self.colliding_farmer
-            if farmer.can_complete_quest():
-                # 퀘스트 완료
-                farmer.quest.complete_quest()
-                farmer.complete_quest()  # 농부가 걸어 나감
-                self.colliding_farmer = None
-                print("퀘스트 완료!")
-            else:
-                print("요구사항을 충족하지 못했습니다!")
+        print("try_complete_quest 호출됨!")
+
+        if not hasattr(self, 'colliding_farmer'):
+            print("colliding_farmer 속성이 없습니다!")
+            return
+
+        if self.colliding_farmer is None:
+            print("colliding_farmer가 None입니다!")
+            return
+
+        print(f"Farmer와 충돌 중! Farmer 상태: {self.colliding_farmer.state}")
+
+        farmer = self.colliding_farmer
+        if farmer.can_complete_quest():
+            # 퀘스트 완료
+            print("퀘스트 요구사항 충족! 완료 처리 중...")
+            farmer.quest.complete_quest()
+            farmer.complete_quest()  # 농부가 걸어 나감
+            self.colliding_farmer = None
+            print("퀘스트 완료!")
+        else:
+            print("요구사항을 충족하지 못했습니다!")

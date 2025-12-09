@@ -42,7 +42,6 @@ def handle_events():
                 elif event.key == SDLK_u:
                     common.coin_number += 1000
 
-
             if event.type == SDL_MOUSEMOTION or event.type == SDL_MOUSEBUTTONDOWN:
                 # 모든 인터페이스에 마우스 이벤트 전달
                 for i, interface in enumerate(interfaces):

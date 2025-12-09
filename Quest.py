@@ -198,8 +198,7 @@ class Farmer:
         return self.x - 75, self.y - 75, self.x + 75, self.y + 75
 
     def handle_collision(self, group, other):
-        pass
-
+        print(f"Farmer 충돌 감지! group: {group}, other: {other}")
 
 class Quest:
     def __init__(self):
