@@ -49,7 +49,9 @@ class Farmer:
         self.anim_index = 0
 
         self.talking_box_image = load_image("Graphic/textbox/talking_popup.png")
+        self.reward_image = load_image("Characters/farmer/chest.png")
         self.quest = None  # Quest 객체를 저장할 변수
+        self.can_complete = False
 
     def set_quest(self, quest):
         self.quest = quest
@@ -76,6 +78,10 @@ class Farmer:
                 reward_text = self.quest.get_reward_text()
                 self.font.draw(self.x - 110, self.y + 140, reward_text, (50, 100, 50))
 
+                if self.can_complete:
+                    self.reward_image.clip_draw(0, 0, 32, 32, self.x + 70, self.y + 140, 40, 40)
+
+
     def update(self):
         if self.state == 'walk_in':
             # 왼쪽으로 걸어 들어옴
@@ -89,6 +95,7 @@ class Farmer:
                 self.frame_counter = 0
 
         elif self.state == 'idle':
+            self.can_complete = self.can_complete_quest()
             pass
 
         elif self.state == 'walk_out':
@@ -108,6 +115,32 @@ class Farmer:
             self.current_image_index = start + self.anim_index
             self.frame_counter = 0
             print(f'{self.x, self.y}')
+
+    def can_complete_quest(self):
+        if self.quest is None:
+            return False
+
+        # quest_type에 따라 요구사항 확인
+        if self.quest.quest_type == 0:  # 코인으로 이것 좀 사겠니?
+            return common.coin_number >= self.quest.requirement
+
+        elif self.quest.quest_type == 1:  # 나에게 음식 좀 줄 수 있니?
+            # game_world에서 Food 객체 개수 확인
+            from Food import Food
+            import game_world
+            foods = game_world.get_objects_by_type(Food)
+            return len(foods) >= self.quest.requirement
+
+        elif self.quest.quest_type == 2:  # 이거랑 교환하지 않을래?
+            # 디버프를 받아들일 의향이 있는지 (플레이어가 클릭하면 True)
+            # 이 경우는 항상 교환 가능
+            return True
+
+        elif self.quest.quest_type == 3:  # 이걸 줄게!
+            # 무료 선물이므로 항상 받을 수 있음
+            return True
+
+        return False
 
     def complete_quest(self):
         if self.state == 'idle':
