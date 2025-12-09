@@ -6,6 +6,7 @@ from Interface import Background, StartUI, Interface
 from Animal import Animal
 from Food import Food, FoodSpawner
 from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
+from Quest import Quest, Farmer
 # Game object class here
 
 interfaces = []
@@ -48,6 +49,7 @@ def handle_events():
 def reset_world():
     global food, background, animal, startui, speed_up, food_spawner
 
+
     # stage == 0
     background = Background()
     game_world.add_object(background, 0)
@@ -57,6 +59,10 @@ def reset_world():
 
     # stage == 1
     game_world.add_object(background, 1)
+
+    farmer = Farmer()
+    game_world.add_object(farmer, 1)
+    quest = Quest(farmer)
 
     # speed_up = Interface("speed_up.png")
     # speed_up.location(108, 108, 50, 50, 50, 50)
