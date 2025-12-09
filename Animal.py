@@ -199,7 +199,13 @@ class Animal:
         self.state_machine.handle_state_event(('INPUT', event))
 
     def get_bb(self):
-        return self.x - 40, self.y - 120, self.x + 40, self.y - 40
+        # size 기본값 200을 기준으로 비율 계산
+        ratio = self.size / 200.0
+        # 기본 박스 크기: 너비 80 (좌우 각 40), 높이 80 (상하 40, 120)
+        half_width = 40 * ratio
+        bottom_offset = 120 * ratio
+        top_offset = 40 * ratio
+        return self.x - half_width, self.y - bottom_offset+ 20, self.x + half_width, self.y - top_offset
 
     def handle_collision(self, group, other):
         if group == 'animal:food':
@@ -210,5 +216,3 @@ class Animal:
             if randint(0, 100) < common.COIN_SPAWN_PROBABILITY:
                 common.coin_number += 10
             # print(f'size up: {self.size}')
-
-
