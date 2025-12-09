@@ -1,6 +1,6 @@
 import os
 
-from pico2d import load_image, get_events
+from pico2d import load_image, get_events, load_font
 from sdl2 import SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT
 from common import *
 import game_world
@@ -67,6 +67,7 @@ class Interface:
         self.info = info
         self.popup_box = None
         self.is_hovered = False
+        self.font = load_font("Galmuri11.ttf", 16)
 
     def location(self, origin_w, origin_h, x, y, w, h):
         self.origin_w = origin_w
@@ -81,6 +82,10 @@ class Interface:
         # 팝업이 있으면 그리기
         if self.popup_box is not None:
             self.popup_box.draw()
+            # 팝업 위에 텍스트 그리기 (중앙 정렬)
+            text = "Level 0"
+            text_width = len(text) * 8  # 폰트 크기 16의 경우 대략 절반 너비
+            self.font.draw(self.x - text_width // 2, self.y + 80, text, (255, 255, 255))
 
     def update(self):
         pass
@@ -95,7 +100,7 @@ class Interface:
                     # 팝업 생성
                     self.popup_box = Interface("Graphic/textbox/item_popup.png", "popup")
                     self.popup_box.location(59, 64, self.x, self.y + 80, 118, 128)
-                    print(f"{self.info} hovered - pos: ({self.x}, {self.y}), size: ({self.w}, {self.h}), mouse: ({event.x}, {mouse_y})")
+                    # print(f"{self.info} hovered - pos: ({self.x}, {self.y}), size: ({self.w}, {self.h}), mouse: ({event.x}, {mouse_y})")
             else:
                 if self.is_hovered:
                     self.is_hovered = False
