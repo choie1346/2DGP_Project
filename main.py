@@ -4,7 +4,7 @@ import common
 import game_world
 from Interface import Background, StartUI, Interface
 from Animal import Animal
-from Food import Food
+from Food import Food, FoodSpawner
 from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
 # Game object class here
 
@@ -47,7 +47,7 @@ def handle_events():
 
 
 def reset_world():
-    global food, background, animal, startui, speed_up
+    global food, background, animal, startui, speed_up, food_spawner
 
     # stage == 0
     background = Background()
@@ -66,16 +66,22 @@ def reset_world():
     add_interface("Graphic/time_decrease.png", "frequency_up",  23, 38, 110, 50, 30, 50)
     add_interface("Graphic/maxcount_up.png", "maxcount_up", 24, 35, 170, 50, 50, 50)
     add_interface("Items/coins/coinchest2.png", "coinchest", 256, 256, 900, 50, 50, 50)
-    food = []
+
+    # FoodSpawner 생성
+    food_spawner = FoodSpawner()
+    game_world.add_object(food_spawner, 1)
+
+    # Food 생성
     for i in range(count_food):
-        food.append(Food())
-        game_world.add_object(food[i], 1)
+        food = Food()
+        game_world.add_object(food, 1)
+        game_world.add_collision_pair('animal:food', None, food)
+
     animal = Animal()
     game_world.add_object(animal, 1)
 
     game_world.add_collision_pair('animal:food', animal, None)
-    for f in food:
-        game_world.add_collision_pair('animal:food', None, f)
+
 
 def update_world():
     game_world.update()

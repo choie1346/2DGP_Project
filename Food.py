@@ -1,9 +1,9 @@
-
 from pico2d import load_image, get_events, draw_rectangle
-from random import randrange
-from common import STAGE
+from random import randrange, uniform
+import common
 import game_world
 from sdl2 import SDL_KEYDOWN, SDLK_m
+from time import time
 
 image =[
     "Items/foods/level1f.png",
@@ -52,3 +52,23 @@ class Food:
         if group == 'animal:food':
             game_world.remove_object(self)
             game_world.remove_collision_object(self)
+
+
+class FoodSpawner:
+    def __init__(self):
+        self.current_time = 0.0
+        self.spawn_time = uniform(common.FOOD_MIN_CREATE_TIME, common.FOOD_MAX_CREATE_TIME)
+
+    def update(self):
+        if common.STAGE == 1:
+            print(f'Spawn in: {self.spawn_time - self.current_time:.2f} sec')
+            self.current_time += 0.016
+            if self.current_time >= self.spawn_time:
+                new_food = Food()
+                game_world.add_object(new_food, 1)
+                game_world.add_collision_pair('animal:food', None, new_food)
+                self.current_time = 0.0
+                self.spawn_time = uniform(5.0, 10.0)
+
+    def draw(self):
+        pass
