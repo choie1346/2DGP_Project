@@ -10,6 +10,8 @@ FOOD_CUR_NUMBER = 10
 FOOD_MIN_CREATE_TIME = 6.0
 FOOD_MAX_CREATE_TIME = 11.0
 
+food_level = 0
+
 GROW_ANIMAL_NUMBER = [10, 30, 50, 100, 20, 30, 50, 100, 200]
 
 def change_stage(new_stage):

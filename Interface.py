@@ -71,7 +71,7 @@ class Interface:
         self.popup_box = None
         self.is_hovered = False
         self.font = load_font("Galmuri11.ttf", 16)
-        self.level = 0
+        self.level = 1
 
     def location(self, origin_w, origin_h, x, y, w, h):
         self.origin_w = origin_w
@@ -116,15 +116,19 @@ class Interface:
             mouse_y = y_transformation(event.y)
             if (self.x - self.w / 2) <= event.x <= (self.x + self.w / 2) and (self.y - self.h / 2) <= mouse_y <= (self.y + self.h / 2):
                 if self.info == "speed_up":
+                    if self.level >= 5: return
                     self.level += 1
                     print('동물 스피드 업')
                 elif self.info == "food_upgrade":
+                    if self.level >= 10: return
                     self.level += 1
+                    common.food_level += 1
                     print('음식 업그레이드')
                     all_foods = game_world.get_objects_by_type(Food)
                     for food in all_foods:
                         food.upgrade()
                 elif self.info == "food_spawn":
+                    if self.level >= 5: return
                     self.level += 1
                     print('음식 생성 시간 단축')
                     common.FOOD_MIN_CREATE_TIME -= 1.0

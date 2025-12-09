@@ -22,9 +22,9 @@ class Food:
     def __init__(self):
         self.x, self.y = randrange(30, 750 + 1), randrange(100, 500 + 1)
         self.size = 0
-        self.current = 0
+        self.current = common.food_level
         self.creating = True
-        self.image = load_image(image[0])
+        self.image = load_image(image[self.current])
 
     def update(self):
         if self.creating:
