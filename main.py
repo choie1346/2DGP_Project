@@ -5,7 +5,6 @@ import game_world
 from Interface import Background, StartUI, Interface
 from Animal import Animal
 from Food import Food, FoodSpawner
-from Coin import Coin, CoinSpawner
 from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
 # Game object class here
 
@@ -81,8 +80,6 @@ def reset_world():
     game_world.add_object(animal, 1)
 
     game_world.add_collision_pair('animal:food', animal, None)
-
-    game_world.add_collision_pair("animal:coin", animal, None)
 
 
 def update_world():
