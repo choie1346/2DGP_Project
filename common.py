@@ -7,7 +7,7 @@ STAGE = 0
 
 # 코인 관련
 coin_number = 0
-COIN_SPAWN_PROBABILITY = 30
+COIN_SPAWN_PROBABILITY = 50
 
 # 음식 관련
 FOOD_CUR_NUMBER = 10
@@ -18,7 +18,7 @@ FOOD_MAX_CREATE_TIME = 10.0
 # 동물 관련
 ANIMAL_SPEED = 1.0
 GROW_ANIMAL_NUMBER = [50, 150, 300, 50, 150, 200, 300, 500]
-UNICON_UNLOCK = False
+UNICON_UNLOCK = True
 
 # 게임 종료 정보
 final_animal_level = 0  # 게임 종료 시 동물 레벨 저장

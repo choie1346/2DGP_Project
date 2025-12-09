@@ -32,7 +32,7 @@ class Food:
 
     def draw(self):
         self.image.clip_draw(0, 0, 64, 64, self.x, self.y, self.size, self.size)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def craete(self):
         self.size += 5

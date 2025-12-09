@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle, load_font
+from pico2d import load_image, draw_rectangle, load_font, load_music
 
 import common
 from state_machine import StateMachine
@@ -207,10 +207,20 @@ class Animal:
             }
         )
 
+        self.grow_bgm = load_music("sounds/animal_grow.mp3")
+        self.complete_bgm = load_music("sounds/quest_complete.mp3")
+        self.reject_bgm = load_music("sounds/quest_rejection.mp3")
+        self.clear_bgm = load_music("sounds/game_clear4.mp3")
+
     def grow(self):
-        if self.current == 3 or self.current == 8:
-            # print('최대 성장 도달')
+        # current == 3 (타조)일 때: UNICON_UNLOCK이 False면 성장 중지
+        if self.current == 3 and not common.UNICON_UNLOCK:
             return
+
+        # current == 8 (유니콘)일 때: 항상 성장 중지
+        if self.current == 8:
+            return
+
         self.current += 1
         # if self.current >= len(image_dirs[0]):
         #     self.current = len(image_dirs[0]) - 1
@@ -218,6 +228,8 @@ class Animal:
         #     return
         self.size = 200
         self.image = load_image(image_dirs[self.dir][self.current])
+        self.grow_bgm.set_volume(32)
+        self.grow_bgm.play()
         # print(f'Animal grew to stage {animal.current}')
 
     def update(self):
@@ -225,14 +237,17 @@ class Animal:
         if self.speed != common.ANIMAL_SPEED:
             self.speed = common.ANIMAL_SPEED
 
-        if self.current == 3 or self.current == 8:
+        # 엔딩 조건 체크
+        if self.current == 8:  # 유니콘
             if self.size >= 500:
                 self.EndGame()
-            # print(f'Animal speed updated: {self.speed}')
+        elif self.current == 3:  # 타조 (UNICON_UNLOCK이 False일 때)
+            if not common.UNICON_UNLOCK and self.size >= 500:
+                self.EndGame()
 
     def draw(self):
         self.state_machine.draw()
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         self.state_machine.handle_state_event(('INPUT', event))
@@ -252,13 +267,20 @@ class Animal:
             food = game_world.get_one_object_by_type(Food)
             self.size += (food.current + 1)
 
-            # 최대 레벨(3 또는 8)이 아닐 때만 성장 체크
-            if self.current < len(common.GROW_ANIMAL_NUMBER) and self.current != 3 and self.current != 8:
+            # 성장 체크: current가 3이고 UNICON_UNLOCK이 False면 성장 안함
+            # current가 8이면 성장 안함
+            should_check_grow = True
+            if self.current == 3 and not common.UNICON_UNLOCK:
+                should_check_grow = False
+            elif self.current == 8:
+                should_check_grow = False
+
+            if should_check_grow and self.current < len(common.GROW_ANIMAL_NUMBER):
                 if self.size >= common.GROW_ANIMAL_NUMBER[self.current] + 200:
                     self.grow()
 
             if randint(0, 100) < common.COIN_SPAWN_PROBABILITY:
-                common.coin_number += 10
+                common.coin_number += 20
         elif group == 'animal:farmer':
             print("Farmer와 충돌! colliding_farmer 저장")
             self.colliding_farmer = other
@@ -285,6 +307,8 @@ class Animal:
             farmer.complete_quest()  # 농부가 걸어 나감
             self.colliding_farmer = None
             print("퀘스트 완료!")
+            self.complete_bgm.set_volume(32)
+            self.complete_bgm.play()
         else:
             print("요구사항을 충족하지 못했습니다!")
 
@@ -307,7 +331,12 @@ class Animal:
             farmer.complete_quest()
             self.colliding_farmer = None
             print("퀘스트를 거절했습니다.")
+            self.reject_bgm.set_volume(32)
+            self.reject_bgm.play()
 
     def EndGame(self):
         common.final_animal_level = self.current  # 게임 종료 시 현재 레벨 저장
         common.change_stage(2)
+        self.clear_bgm.set_volume(32)
+        self.clear_bgm.play()
+

@@ -11,6 +11,15 @@ from Quest import Quest, Farmer, QuestSpawner
 
 interfaces = []
 
+# 배경 음악 로드 (오류 발생 시 무시)
+try:
+    music = load_wav("sounds/background_music.wav")
+    music.set_volume(64)
+    music.repeat_play()
+except:
+    print("배경 음악을 로드할 수 없습니다. 게임을 계속 진행합니다.")
+    music = None
+
 def add_interface(path, info, origin_x, origin_y, box_w, box_h, draw_w, draw_h):
     interface = Interface(path, info)
     interfaces.append(interface)

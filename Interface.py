@@ -1,6 +1,6 @@
 import os
 
-from pico2d import load_image, get_events, load_font
+from pico2d import load_image, get_events, load_font, load_music
 from sdl2 import SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT
 
 import common
@@ -49,6 +49,8 @@ class Interface:
         self.popup_box = None
         self.is_hovered = False
         self.font = load_font("Galmuri11.ttf", 16)
+        self.level_up_bgm = load_music("sounds/level_up.mp3")
+
 
     def location(self, origin_w, origin_h, x, y, w, h):
         self.origin_w = origin_w
@@ -145,6 +147,8 @@ class Interface:
                         common.speed_level += 1
                         # print(f'New ANIMAL_SPEED: {common.ANIMAL_SPEED}')
                         # print('동물 스피드 업')
+                        self.level_up_bgm.set_volume(32)
+                        self.level_up_bgm.play()
                 elif self.info == "food_upgrade":
                     if common.food_upgrade_level >= 10: return
                     if common.coin_number >= common.LEVEL_UP_COST[common.food_upgrade_level - 1]:
@@ -154,6 +158,8 @@ class Interface:
                         all_foods = game_world.get_objects_by_type(Food)
                         for food in all_foods:
                             food.upgrade()
+                        self.level_up_bgm.set_volume(32)
+                        self.level_up_bgm.play()
                 elif self.info == "food_spawn":
                     if common.food_spawn_level >= 5: return
                     if common.coin_number >= common.LEVEL_UP_COST[common.food_spawn_level - 1]:
@@ -163,6 +169,8 @@ class Interface:
                         common.FOOD_MIN_CREATE_TIME = max(0.5, common.FOOD_MIN_CREATE_TIME - 1.0)
                         common.FOOD_MAX_CREATE_TIME = max(1.0, common.FOOD_MAX_CREATE_TIME - 1.0)
                         # print(f'New FOOD_MIN_CREATE_TIME: {common.FOOD_MIN_CREATE_TIME}, FOOD_MAX_CREATE_TIME: {common.FOOD_MAX_CREATE_TIME}')
+                        self.level_up_bgm.set_volume(32)
+                        self.level_up_bgm.play()
 
 class Background:
     def __init__(self):

@@ -5,7 +5,7 @@ import game_world
 
 quests = [
     {"코인으로 이것 좀 사겠니?" : randint(common.coin_number, common.coin_number + 500)},
-    {"나에게 음식 좀 줄 수 있니?": randint(10, 50)},
+    {"나에게 음식 좀 줄 수 있니?": randint(10, common.FOOD_MAX_NUMBER)},
     {"이거랑 교환하지 않을래?": randint(1, 3)},
     {"이걸 줄게!" : 1}
 ]
@@ -191,6 +191,7 @@ class Farmer:
             self.state = 'walk_out'
             self.anim_start, self.anim_end = WALK_RIGHT
             self.anim_index = 0
+
 
     def get_bb(self):
         return self.x - 75, self.y - 75, self.x + 75, self.y + 75
