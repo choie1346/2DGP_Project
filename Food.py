@@ -61,7 +61,7 @@ class FoodSpawner:
 
     def update(self):
         if common.STAGE == 1:
-            print(f'Spawn in: {self.spawn_time - self.current_time:.2f} sec')
+            # print(f'Spawn in: {self.spawn_time - self.current_time:.2f} sec')
             self.current_time += 0.016
             if self.current_time >= self.spawn_time:
                 new_food = Food()

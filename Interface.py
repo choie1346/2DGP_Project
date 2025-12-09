@@ -68,6 +68,7 @@ class Interface:
         self.popup_box = None
         self.is_hovered = False
         self.font = load_font("Galmuri11.ttf", 16)
+        self.level = 0
 
     def location(self, origin_w, origin_h, x, y, w, h):
         self.origin_w = origin_w
@@ -83,7 +84,7 @@ class Interface:
         if self.popup_box is not None:
             self.popup_box.draw()
             # 팝업 위에 텍스트 그리기 (중앙 정렬)
-            text = "Level 0"
+            text = "Level " + str(self.level)
             text_width = len(text) * 8  # 폰트 크기 16의 경우 대략 절반 너비
             self.font.draw(self.x - text_width // 2, self.y + 80, text, (255, 255, 255))
 

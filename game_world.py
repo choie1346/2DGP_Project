@@ -64,6 +64,11 @@ def remove_collision_object(o):
         if o in pairs[1]:
             pairs[1].remove(o)
 
-
-# def frame_time():
-#     return None
+def get_objects_by_type(obj_type):
+    """특정 타입의 모든 객체를 반환"""
+    objects = []
+    for layer in world:
+        for o in layer:
+            if isinstance(o, obj_type):
+                objects.append(o)
+    return objects

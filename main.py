@@ -8,9 +8,6 @@ from Food import Food, FoodSpawner
 from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
 # Game object class here
 
-
-count_food = 10
-
 interfaces = []
 
 def add_interface(path, info, origin_x, origin_y, box_w, box_h, draw_w, draw_h):
@@ -37,8 +34,10 @@ def handle_events():
             animal.handle_event(event)
             if event.type == SDL_KEYDOWN:
                 if event.key == SDLK_m:
-                    for i in range(count_food):
-                        food[i].upgrade()
+                    # game_world에서 모든 Food 객체 가져와서 업그레이드
+                    all_foods = game_world.get_objects_by_type(Food)
+                    for food in all_foods:
+                        food.upgrade()
 
             if event.type == SDL_MOUSEMOTION or event.type == SDL_MOUSEBUTTONDOWN:
                 # 모든 인터페이스에 마우스 이벤트 전달
@@ -72,7 +71,7 @@ def reset_world():
     game_world.add_object(food_spawner, 1)
 
     # Food 생성
-    for i in range(count_food):
+    for i in range(common.FOOD_CUR_NUMBER):
         food = Food()
         game_world.add_object(food, 1)
         game_world.add_collision_pair('animal:food', None, food)
