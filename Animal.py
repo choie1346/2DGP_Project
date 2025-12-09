@@ -149,6 +149,18 @@ class run:
         self.animal.x += self.animal.velocity_x * self.animal.speed
         self.animal.y += self.animal.velocity_y * self.animal.speed
 
+        # X축 제한 (좌우)
+        if self.animal.x < 50:
+            self.animal.x = 50
+        elif self.animal.x > common.WIDTH - 50:
+            self.animal.x = common.WIDTH - 50
+
+        # Y축 제한 (상하)
+        if self.animal.y < 50:
+            self.animal.y = 50
+        elif self.animal.y > common.MAX_Y + 100:
+            self.animal.y = common.MAX_Y + 100
+
         # 애니메이션 프레임 업데이트
         self.frame_time += 0.01
         if self.frame_time > 0.1:
@@ -166,10 +178,10 @@ class Animal:
     def __init__(self):
         self.x, self.y = 400, 350
         self.route = 1
-        self.current = 8
+        self.current = 0
         self.frame = 0
         self.dir = 0
-        self.size = 400
+        self.size = 200
         self.speed = common.ANIMAL_SPEED  # 이동 속도
         self.velocity_x = 0  # X 방향 속도
         self.velocity_y = 0  # Y 방향 속도
