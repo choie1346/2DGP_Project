@@ -2,7 +2,10 @@ import os
 
 from pico2d import load_image, get_events, load_font
 from sdl2 import SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT
+
+import common
 from common import *
+from Food import Food
 import game_world
 
 def y_transformation(y):
@@ -102,6 +105,7 @@ class Interface:
                     self.popup_box = Interface("Graphic/textbox/item_popup.png", "popup")
                     self.popup_box.location(59, 64, self.x, self.y + 80, 118, 128)
                     # print(f"{self.info} hovered - pos: ({self.x}, {self.y}), size: ({self.w}, {self.h}), mouse: ({event.x}, {mouse_y})")
+
             else:
                 if self.is_hovered:
                     self.is_hovered = False
@@ -111,9 +115,22 @@ class Interface:
         elif event.type == SDL_MOUSEBUTTONDOWN:
             mouse_y = y_transformation(event.y)
             if (self.x - self.w / 2) <= event.x <= (self.x + self.w / 2) and (self.y - self.h / 2) <= mouse_y <= (self.y + self.h / 2):
-                print(f"{self.info} clicked")
-
-
+                if self.info == "speed_up":
+                    self.level += 1
+                    print('동물 스피드 업')
+                elif self.info == "food_upgrade":
+                    self.level += 1
+                    print('음식 업그레이드')
+                    all_foods = game_world.get_objects_by_type(Food)
+                    for food in all_foods:
+                        food.upgrade()
+                elif self.info == "food_spawn":
+                    self.level += 1
+                    print('음식 생성 시간 단축')
+                    common.FOOD_MIN_CREATE_TIME -= 1.0
+                    common.FOOD_MAX_CREATE_TIME -= 1.0
+                    print(
+                        f'New FOOD_MIN_CREATE_TIME: {common.FOOD_MIN_CREATE_TIME}, FOOD_MAX_CREATE_TIME: {common.FOOD_MAX_CREATE_TIME}')
 
 class Background:
     def __init__(self):

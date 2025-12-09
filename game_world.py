@@ -65,10 +65,21 @@ def remove_collision_object(o):
             pairs[1].remove(o)
 
 def get_objects_by_type(obj_type):
-    """특정 타입의 모든 객체를 반환"""
     objects = []
     for layer in world:
         for o in layer:
             if isinstance(o, obj_type):
                 objects.append(o)
     return objects
+
+def get_one_object_by_type(obj_type):
+    for layer in world:
+        for o in layer:
+            if isinstance(o, obj_type):
+                return o
+    return None
+
+def clear():
+    for layer in world:
+        layer.clear()
+    collision_pairs.clear()

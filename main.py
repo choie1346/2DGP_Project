@@ -62,8 +62,8 @@ def reset_world():
     # speed_up.location(108, 108, 50, 50, 50, 50)
     # game_world.add_object(speed_up, 1)
     add_interface("Graphic/speed_up.png", "speed_up", 108, 108, 50, 50, 50, 50)
-    add_interface("Graphic/time_decrease.png", "frequency_up",  23, 38, 110, 50, 30, 50)
-    add_interface("Graphic/maxcount_up.png", "maxcount_up", 24, 35, 170, 50, 50, 50)
+    add_interface("Graphic/time_decrease.png", "food_spawn",  23, 38, 110, 50, 30, 50)
+    add_interface("Graphic/maxcount_up.png", "food_upgrade", 24, 35, 170, 50, 50, 50)
     add_interface("Items/coins/coinchest2.png", "coinchest", 256, 256, 900, 50, 50, 50)
 
     # FoodSpawner 생성

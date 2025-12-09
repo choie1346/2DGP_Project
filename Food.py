@@ -52,6 +52,8 @@ class Food:
         if group == 'animal:food':
             game_world.remove_object(self)
             game_world.remove_collision_object(self)
+            common.FOOD_CUR_NUMBER -= 1
+            # print(f'음식 개수: {common.FOOD_CUR_NUMBER}')
 
 
 class FoodSpawner:
@@ -61,14 +63,17 @@ class FoodSpawner:
 
     def update(self):
         if common.STAGE == 1:
+            if common.FOOD_CUR_NUMBER >= common.FOOD_MAX_NUMBER: return
             # print(f'Spawn in: {self.spawn_time - self.current_time:.2f} sec')
-            self.current_time += 0.016
+            self.current_time += 0.05
             if self.current_time >= self.spawn_time:
                 new_food = Food()
                 game_world.add_object(new_food, 1)
                 game_world.add_collision_pair('animal:food', None, new_food)
                 self.current_time = 0.0
-                self.spawn_time = uniform(5.0, 10.0)
+                self.spawn_time = uniform(common.FOOD_MIN_CREATE_TIME, common.FOOD_MAX_CREATE_TIME)
+                common.FOOD_CUR_NUMBER += 1
+                # print(f'음식 개수: {common.FOOD_CUR_NUMBER}')
 
     def draw(self):
         pass

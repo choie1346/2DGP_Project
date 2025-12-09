@@ -1,8 +1,11 @@
 from pico2d import load_image, draw_rectangle
+
+import common
 from state_machine import StateMachine
 import game_world
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n
 from common import STAGE
+from Food import Food
 
 # 0-front, 1-back, 2-left, 3-right
 # route1 - 3까지, route2 - 4부터 8까지
@@ -172,6 +175,16 @@ class Animal:
             }
         )
 
+    def grow(self):
+        self.current += 1
+        if self.current >= len(image_dirs[0]):
+            self.current = len(image_dirs[0]) - 1
+            # print('최대 성장 도달')
+            return
+        self.size = 200
+        self.image = load_image(image_dirs[self.dir][self.current])
+        # print(f'Animal grew to stage {animal.current}')
+
     def update(self):
         self.state_machine.update()
 
@@ -187,5 +200,9 @@ class Animal:
 
     def handle_collision(self, group, other):
         if group == 'animal:food':
-            self.size += 5
+            food = game_world.get_one_object_by_type(Food)
+            self.size += (food.current + 1)
+            if self.size >= common.GROW_ANIMAL_NUMBER[self.current] + 200:
+                self.grow()
             print(f'size up: {self.size}')
+
