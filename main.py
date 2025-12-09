@@ -13,26 +13,37 @@ count_food = 10
 
 interfaces = []
 
-def add_interface(path, origin_x, origin_y, box_w, box_h, draw_w, draw_h):
-    interface = Interface(path)
+def add_interface(path, info, origin_x, origin_y, box_w, box_h, draw_w, draw_h):
+    interface = Interface(path, info)
     interfaces.append(interface)
     interface.location(origin_x, origin_y, box_w, box_h, draw_w, draw_h)
     game_world.add_object(interface, 1)
+    print(f"Interface added: {info}, pos: ({box_w}, {box_h}), size: ({draw_w}, {draw_h})")
 
 
 def handle_events():
     event_list = get_events()
     for event in event_list:
-        animal.handle_event(event)
-        if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_m:
-                for i in range(count_food):
-                    food[i].upgrade()
-            elif event.key == SDLK_ESCAPE:
-                quit()
+        if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            quit()
 
-        if event.type == SDL_MOUSEMOTION or event.type == SDL_MOUSEBUTTONDOWN:
-            startui.handle_event(event)
+        # STAGE 0: 시작 화면
+        if common.STAGE == 0:
+            if event.type == SDL_MOUSEMOTION or event.type == SDL_MOUSEBUTTONDOWN:
+                startui.handle_event(event)
+
+        # STAGE 1: 게임 화면
+        elif common.STAGE == 1:
+            animal.handle_event(event)
+            if event.type == SDL_KEYDOWN:
+                if event.key == SDLK_m:
+                    for i in range(count_food):
+                        food[i].upgrade()
+
+            if event.type == SDL_MOUSEMOTION or event.type == SDL_MOUSEBUTTONDOWN:
+                # 모든 인터페이스에 마우스 이벤트 전달
+                for i, interface in enumerate(interfaces):
+                    interface.handle_event(event)
 
 
 def reset_world():
@@ -51,8 +62,10 @@ def reset_world():
     # speed_up = Interface("speed_up.png")
     # speed_up.location(108, 108, 50, 50, 50, 50)
     # game_world.add_object(speed_up, 1)
-    add_interface("speed_up.png", 108, 108, 50, 50, 50, 50)
-    add_interface("time_decrease.png", 23, 38, 100, 50, 30, 50)
+    add_interface("Graphic/speed_up.png", "speed_up", 108, 108, 50, 50, 50, 50)
+    add_interface("Graphic/time_decrease.png", "frequency_up",  23, 38, 110, 50, 30, 50)
+    add_interface("Graphic/maxcount_up.png", "maxcount_up", 24, 35, 170, 50, 50, 50)
+    add_interface("Items/coins/coinchest2.png", "coinchest", 256, 256, 900, 50, 50, 50)
     food = []
     for i in range(count_food):
         food.append(Food())

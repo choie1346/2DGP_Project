@@ -3,6 +3,7 @@ import os
 from pico2d import load_image, get_events
 from sdl2 import SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT
 from common import *
+import game_world
 
 def y_transformation(y):
     y = HEIGHT - y
@@ -60,11 +61,12 @@ class StartUI:
                 print("click")
                 change_stage(1)
 
-
 class Interface:
-    def __init__(self, path):
-        path = "Graphic/" + path
+    def __init__(self, path, info):
         self.image = load_image(path)
+        self.info = info
+        self.popup_box = None
+        self.is_hovered = False
 
     def location(self, origin_w, origin_h, x, y, w, h):
         self.origin_w = origin_w
@@ -76,12 +78,34 @@ class Interface:
 
     def draw(self):
         self.image.clip_draw(0, 0, self.origin_w, self.origin_h, self.x, self.y, self.w, self.h)
+        # 팝업이 있으면 그리기
+        if self.popup_box is not None:
+            self.popup_box.draw()
 
     def update(self):
         pass
 
     def handle_event(self, event):
-        pass
+        if event.type == SDL_MOUSEMOTION:
+            mouse_y = y_transformation(event.y)
+            # 마우스가 인터페이스 위에 있는지 확인
+            if (self.x - self.w / 2) <= event.x <= (self.x + self.w / 2) and (self.y - self.h / 2) <= mouse_y <= (self.y + self.h / 2):
+                if not self.is_hovered:
+                    self.is_hovered = True
+                    # 팝업 생성
+                    self.popup_box = Interface("Graphic/textbox/item_popup.png", "popup")
+                    self.popup_box.location(59, 64, self.x, self.y + 80, 118, 128)
+                    print(f"{self.info} hovered - pos: ({self.x}, {self.y}), size: ({self.w}, {self.h}), mouse: ({event.x}, {mouse_y})")
+            else:
+                if self.is_hovered:
+                    self.is_hovered = False
+                    # 팝업 제거
+                    self.popup_box = None
+
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            mouse_y = y_transformation(event.y)
+            if (self.x - self.w / 2) <= event.x <= (self.x + self.w / 2) and (self.y - self.h / 2) <= mouse_y <= (self.y + self.h / 2):
+                print(f"{self.info} clicked")
 
 
 
