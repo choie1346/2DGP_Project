@@ -82,11 +82,13 @@ def reset_world():
     game_world.add_object(animal, 1)
 
     game_world.add_collision_pair('animal:food', animal, None)
+    game_world.add_collision_pair('animal:farmer', animal, None)
 
     farmer = Farmer()
     game_world.add_object(farmer, 1)
     quest = Quest()
     farmer.set_quest(quest)
+    game_world.add_collision_pair('animal:farmer', None, farmer)
 
 
 def update_world():

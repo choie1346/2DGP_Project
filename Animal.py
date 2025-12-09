@@ -216,3 +216,6 @@ class Animal:
             if randint(0, 100) < common.COIN_SPAWN_PROBABILITY:
                 common.coin_number += 10
             # print(f'size up: {self.size}')
+        elif group == 'animal:farmer':
+            print(f'농부와 충돌')
+            pass

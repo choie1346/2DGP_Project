@@ -115,6 +115,12 @@ class Farmer:
             self.anim_start, self.anim_end = WALK_RIGHT
             self.anim_index = 0
 
+    def get_bb(self):
+        return self.x - 75, self.y - 75, self.x + 75, self.y + 75
+
+    def handle_collision(self, group, other):
+        pass
+
 
 class Quest:
     def __init__(self):
