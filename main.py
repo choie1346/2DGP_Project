@@ -5,7 +5,7 @@ import game_world
 from Interface import Background, startUI
 from Animal import Animal
 from Food import Food
-from sdl2 import SDL_KEYDOWN, SDLK_m
+from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
 # Game object class here
 
 
@@ -15,9 +15,13 @@ def handle_events():
     event_list = get_events()
     for event in event_list:
         animal.handle_event(event)
-        if event.type == SDL_KEYDOWN and event.key == SDLK_m:
-            for i in range(count_food):
-                food[i].upgrade()
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_m:
+                for i in range(count_food):
+                    food[i].upgrade()
+            elif event.key == SDLK_ESCAPE:
+                quit()
+
         if event.type == SDL_MOUSEMOTION or event.type == SDL_MOUSEBUTTONDOWN:
             startui.handle_event(event)
 
