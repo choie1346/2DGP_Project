@@ -77,42 +77,53 @@ class run:
         self.frame_time = 0
 
     def enter(self, e):
-        # 키 누름 - 새로운 방향으로 전환 (이전 방향 무시)
+        # 키 누름 - 해당 방향의 상태만 업데이트
         if down_down(e):
-            self.animal.dir = 0
-            self.animal.velocity_x = 0
-            self.animal.velocity_y = -1
-            self.animal.current_key = SDLK_DOWN
+            self.animal.key_down_pressed = True
         elif up_down(e):
-            self.animal.dir = 1
-            self.animal.velocity_x = 0
-            self.animal.velocity_y = 1
-            self.animal.current_key = SDLK_UP
+            self.animal.key_up_pressed = True
         elif left_down(e):
-            self.animal.dir = 2
-            self.animal.velocity_x = -1
-            self.animal.velocity_y = 0
-            self.animal.current_key = SDLK_LEFT
+            self.animal.key_left_pressed = True
         elif right_down(e):
-            self.animal.dir = 3
-            self.animal.velocity_x = 1
-            self.animal.velocity_y = 0
-            self.animal.current_key = SDLK_RIGHT
-        # 키 뗌 - 현재 누르고 있는 키를 뗐을 때만 멈춤
-        elif down_up(e) and self.animal.current_key == SDLK_DOWN:
-            self.animal.velocity_y = 0
-            self.animal.current_key = None
-        elif up_up(e) and self.animal.current_key == SDLK_UP:
-            self.animal.velocity_y = 0
-            self.animal.current_key = None
-        elif left_up(e) and self.animal.current_key == SDLK_LEFT:
-            self.animal.velocity_x = 0
-            self.animal.current_key = None
-        elif right_up(e) and self.animal.current_key == SDLK_RIGHT:
-            self.animal.velocity_x = 0
-            self.animal.current_key = None
+            self.animal.key_right_pressed = True
+        # 키 뗌 - 해당 방향의 상태만 해제
+        elif down_up(e):
+            self.animal.key_down_pressed = False
+        elif up_up(e):
+            self.animal.key_up_pressed = False
+        elif left_up(e):
+            self.animal.key_left_pressed = False
+        elif right_up(e):
+            self.animal.key_right_pressed = False
         elif key_n(e):
             self.animal.current = (self.animal.current + 1) % len(image_dirs[0])
+
+        # 키 상태에 따라 속도 계산
+        self.animal.velocity_x = 0
+        self.animal.velocity_y = 0
+
+        if self.animal.key_left_pressed:
+            self.animal.velocity_x -= 1
+        if self.animal.key_right_pressed:
+            self.animal.velocity_x += 1
+        if self.animal.key_down_pressed:
+            self.animal.velocity_y -= 1
+        if self.animal.key_up_pressed:
+            self.animal.velocity_y += 1
+
+        # 방향 결정 (스프라이트 이미지용) - 이동 중일 때만 업데이트
+        if self.animal.velocity_x != 0 or self.animal.velocity_y != 0:
+            # 우선순위: 수직 > 수평
+            if abs(self.animal.velocity_y) > abs(self.animal.velocity_x):
+                if self.animal.velocity_y < 0:
+                    self.animal.dir = 0  # down
+                else:
+                    self.animal.dir = 1  # up
+            else:
+                if self.animal.velocity_x < 0:
+                    self.animal.dir = 2  # left
+                else:
+                    self.animal.dir = 3  # right
 
         self.animal.image = load_image(image_dirs[self.animal.dir][self.animal.current])
 
@@ -145,6 +156,13 @@ class Animal:
         self.speed = 5  # 이동 속도
         self.velocity_x = 0  # X 방향 속도
         self.velocity_y = 0  # Y 방향 속도
+
+        # 각 방향키의 눌림 상태 추적
+        self.key_up_pressed = False
+        self.key_down_pressed = False
+        self.key_left_pressed = False
+        self.key_right_pressed = False
+
         self.RUN = run(self)
         self.state_machine = StateMachine(
             self.RUN,  # initial state
