@@ -3,7 +3,7 @@ from pico2d import load_image, draw_rectangle, load_font
 import common
 from state_machine import StateMachine
 import game_world
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n, SDLK_e
 from Food import Food
 from random import randint
 
@@ -56,6 +56,8 @@ def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 def key_n(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_n
+def key_e(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_e
 
 def up_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
@@ -215,7 +217,20 @@ class Animal:
                 self.grow()
             if randint(0, 100) < common.COIN_SPAWN_PROBABILITY:
                 common.coin_number += 10
-            # print(f'size up: {self.size}')
         elif group == 'animal:farmer':
-            print(f'농부와 충돌')
-            pass
+            # Farmer와 충돌 중일 때 저장
+            if key_e:
+                # self.colliding_farmer = other
+                self.try_complete_quest()
+
+    def try_complete_quest(self):
+        if hasattr(self, 'colliding_farmer') and self.colliding_farmer:
+            farmer = self.colliding_farmer
+            if farmer.can_complete_quest():
+                # 퀘스트 완료
+                farmer.quest.complete_quest()
+                farmer.complete_quest()  # 농부가 걸어 나감
+                self.colliding_farmer = None
+                print("퀘스트 완료!")
+            else:
+                print("요구사항을 충족하지 못했습니다!")

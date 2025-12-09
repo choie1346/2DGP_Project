@@ -5,7 +5,7 @@ import game_world
 from Interface import Background, StartUI, Interface
 from Animal import Animal
 from Food import Food, FoodSpawner
-from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
+from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDLK_e, SDLK_u
 from Quest import Quest, Farmer, QuestSpawner
 # Game object class here
 
@@ -39,6 +39,9 @@ def handle_events():
                     all_foods = game_world.get_objects_by_type(Food)
                     for food in all_foods:
                         food.upgrade()
+                elif event.key == SDLK_u:
+                    common.coin_number += 1000
+
 
             if event.type == SDL_MOUSEMOTION or event.type == SDL_MOUSEBUTTONDOWN:
                 # 모든 인터페이스에 마우스 이벤트 전달
@@ -60,18 +63,9 @@ def reset_world():
     # stage == 1
     game_world.add_object(background, 1)
 
-    add_interface("Graphic/speed_up.png", "speed_up", 108, 108, 50, 50, 50, 50)
-    add_interface("Graphic/time_decrease.png", "food_spawn",  23, 38, 110, 50, 30, 50)
-    add_interface("Graphic/maxcount_up.png", "food_upgrade", 24, 35, 170, 50, 50, 50)
-    add_interface("Items/coins/coinchest2.png", "coinchest", 256, 256, 880, 50, 50, 50)
-
     # FoodSpawner 생성
     food_spawner = FoodSpawner()
     game_world.add_object(food_spawner, 1)
-
-    # QuestSpawner 생성 (자동으로 일정 시간마다 퀘스트 출현)
-    quest_spawner = QuestSpawner()
-    game_world.add_object(quest_spawner, 1)
 
     # Food 생성
     for i in range(common.FOOD_CUR_NUMBER):
@@ -84,6 +78,15 @@ def reset_world():
 
     game_world.add_collision_pair('animal:food', animal, None)
     game_world.add_collision_pair('animal:farmer', animal, None)
+
+    # QuestSpawner 생성 (자동으로 일정 시간마다 퀘스트 출현)
+    quest_spawner = QuestSpawner()
+    game_world.add_object(quest_spawner, 1)
+
+    add_interface("Graphic/speed_up.png", "speed_up", 108, 108, 50, 50, 50, 50)
+    add_interface("Graphic/time_decrease.png", "food_spawn", 23, 38, 110, 50, 30, 50)
+    add_interface("Graphic/maxcount_up.png", "food_upgrade", 24, 35, 170, 50, 50, 50)
+    add_interface("Items/coins/coinchest2.png", "coinchest", 256, 256, 880, 50, 50, 50)
 
 
 def update_world():
