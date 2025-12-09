@@ -2,7 +2,7 @@ from pico2d import *
 
 import common
 import game_world
-from Interface import Background, startUI
+from Interface import Background, StartUI, Interface
 from Animal import Animal
 from Food import Food
 from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
@@ -10,6 +10,15 @@ from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
 
 
 count_food = 10
+
+interfaces = []
+
+def add_interface(path, origin_x, origin_y, box_w, box_h, draw_w, draw_h):
+    interface = Interface(path)
+    interfaces.append(interface)
+    interface.location(origin_x, origin_y, box_w, box_h, draw_w, draw_h)
+    game_world.add_object(interface, 1)
+
 
 def handle_events():
     event_list = get_events()
@@ -27,18 +36,23 @@ def handle_events():
 
 
 def reset_world():
-    global food, background, animal, startui
+    global food, background, animal, startui, speed_up
 
     # stage == 0
     background = Background()
     game_world.add_object(background, 0)
 
-    startui = startUI()
+    startui = StartUI()
     game_world.add_object(startui, 0)
-
 
     # stage == 1
     game_world.add_object(background, 1)
+
+    # speed_up = Interface("speed_up.png")
+    # speed_up.location(108, 108, 50, 50, 50, 50)
+    # game_world.add_object(speed_up, 1)
+    add_interface("speed_up.png", 108, 108, 50, 50, 50, 50)
+    add_interface("time_decrease.png", 23, 38, 100, 50, 30, 50)
     food = []
     for i in range(count_food):
         food.append(Food())
