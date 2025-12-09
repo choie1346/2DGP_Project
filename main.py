@@ -6,7 +6,7 @@ from Interface import Background, StartUI, Interface
 from Animal import Animal
 from Food import Food, FoodSpawner
 from sdl2 import SDL_KEYDOWN, SDLK_m, SDLK_ESCAPE, SDL_QUIT
-from Quest import Quest, Farmer
+from Quest import Quest, Farmer, QuestSpawner
 # Game object class here
 
 interfaces = []
@@ -47,7 +47,7 @@ def handle_events():
 
 
 def reset_world():
-    global food, background, animal, startui, speed_up, food_spawner
+    global food, background, animal, startui, speed_up, food_spawner, quest_spawner
 
 
     # stage == 0
@@ -60,9 +60,6 @@ def reset_world():
     # stage == 1
     game_world.add_object(background, 1)
 
-    # speed_up = Interface("speed_up.png")
-    # speed_up.location(108, 108, 50, 50, 50, 50)
-    # game_world.add_object(speed_up, 1)
     add_interface("Graphic/speed_up.png", "speed_up", 108, 108, 50, 50, 50, 50)
     add_interface("Graphic/time_decrease.png", "food_spawn",  23, 38, 110, 50, 30, 50)
     add_interface("Graphic/maxcount_up.png", "food_upgrade", 24, 35, 170, 50, 50, 50)
@@ -71,6 +68,10 @@ def reset_world():
     # FoodSpawner 생성
     food_spawner = FoodSpawner()
     game_world.add_object(food_spawner, 1)
+
+    # QuestSpawner 생성 (자동으로 일정 시간마다 퀘스트 출현)
+    quest_spawner = QuestSpawner()
+    game_world.add_object(quest_spawner, 1)
 
     # Food 생성
     for i in range(common.FOOD_CUR_NUMBER):
@@ -83,12 +84,6 @@ def reset_world():
 
     game_world.add_collision_pair('animal:food', animal, None)
     game_world.add_collision_pair('animal:farmer', animal, None)
-
-    farmer = Farmer()
-    game_world.add_object(farmer, 1)
-    quest = Quest()
-    farmer.set_quest(quest)
-    game_world.add_collision_pair('animal:farmer', None, farmer)
 
 
 def update_world():

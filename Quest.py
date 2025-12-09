@@ -1,5 +1,5 @@
 import common
-from random import randint
+from random import randint, uniform
 from pico2d import load_image, load_font
 import game_world
 
@@ -33,6 +33,49 @@ farmer_images = [
     "Characters/farmer/right4.png",
     "Characters/farmer/right5.png"
 ]
+
+class QuestSpawner:
+    def __init__(self):
+        # print("QuestSpawner initialized")
+        self.current_time = 0.0
+        self.spawn_time = uniform(30.0, 60.0)  # 30~60초마다 퀘스트 출현
+        self.active_farmer = None  # 현재 활성화된 농부
+        self.active_quest = None  # 현재 활성화된 퀘스트
+
+    def update(self):
+        if common.STAGE == 1:
+            if self.active_farmer is None or self.active_farmer.state == 'hidden':
+                self.current_time += 0.01
+                # print(f'Next quest in: {self.spawn_time - self.current_time:.2f} sec')
+
+                if self.current_time >= self.spawn_time:
+                    self.spawn_quest()
+                    self.current_time = 0.0
+                    self.spawn_time = uniform(30.0, 60.0)
+
+            if self.active_farmer and self.active_farmer.state == 'hidden':
+                game_world.remove_object(self.active_farmer)
+                game_world.remove_collision_object(self.active_farmer)
+                self.active_farmer = None
+                self.active_quest = None
+
+    def spawn_quest(self):
+        farmer = Farmer()
+        game_world.add_object(farmer, 1)
+        game_world.add_collision_pair('animal:farmer', None, farmer)
+
+        # 새로운 퀘스트 생성
+        quest = Quest()
+        farmer.set_quest(quest)
+
+        self.active_farmer = farmer
+        self.active_quest = quest
+
+        # print(f"New quest spawned! Next spawn in {self.spawn_time:.1f} seconds")
+
+    def draw(self):
+        pass
+
 
 class Farmer:
     def __init__(self):
@@ -79,7 +122,7 @@ class Farmer:
                 self.font.draw(self.x - 110, self.y + 140, reward_text, (50, 100, 50))
 
                 if self.can_complete:
-                    self.reward_image.clip_draw(0, 0, 32, 32, self.x + 70, self.y + 140, 40, 40)
+                    self.reward_image.clip_draw(0, 0, 32, 32, self.x + 80, self.y + 140, 40, 40)
 
 
     def update(self):
