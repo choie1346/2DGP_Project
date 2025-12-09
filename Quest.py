@@ -49,14 +49,32 @@ class Farmer:
         self.anim_index = 0
 
         self.talking_box_image = load_image("Graphic/textbox/talking_popup.png")
+        self.quest = None  # Quest 객체를 저장할 변수
+
+    def set_quest(self, quest):
+        self.quest = quest
 
     def draw(self):
         if self.state != 'hidden':
             current_image = self.images[self.current_image_index]
             current_image.clip_draw(0, 0, 80, 80, self.x, self.y, 150, 150)
 
-            if self.state == 'idle':
-                self.talking_box_image.clip_draw(0, 0, 47, 28, self.x, self.y + 150, 200, 150)
+            if self.state == 'idle' and self.quest:
+                # 말풍선 그리기
+                self.talking_box_image.clip_draw(0, 0, 47, 28, self.x, self.y + 150, 250, 180)
+
+                # Quest 정보 텍스트 그리기
+                # 퀘스트 이름
+                quest_text = f"{self.quest.quest_name}"
+                self.font.draw(self.x - 110, self.y + 200, quest_text, (100, 50, 50))
+
+                # 요구사항
+                requirement_text = self.quest.get_requirement_text()
+                self.font.draw(self.x - 110, self.y + 180, requirement_text, (100, 50, 50))
+
+                # 보상
+                reward_text = self.quest.get_reward_text()
+                self.font.draw(self.x - 110, self.y + 140, reward_text, (50, 100, 50))
 
     def update(self):
         if self.state == 'walk_in':
@@ -99,28 +117,54 @@ class Farmer:
 
 
 class Quest:
-    def __init__(self, farmer):
-        self.farmer = farmer  # Farmer 인스턴스를 저장
-
-        reward_type = randint(0, 3)
+    def __init__(self):
         quest_type = randint(0, 3)
+        reward_type = randint(0, 3)
 
         quest_dict = quests[quest_type]
         self.quest_name = list(quest_dict.keys())[0]
         self.requirement = list(quest_dict.values())[0]
+        self.quest_type = quest_type
+
 
         reward_dict = rewards[reward_type]
         self.reward_name = list(reward_dict.keys())[0]
         self.reward = list(reward_dict.values())[0]
+        self.reward_type = reward_type
         self.is_completed = False
 
-        print(f"Quest: {self.quest_name}, Requirement: {self.requirement}, Reward: {self.reward_name}, {self.reward}")
 
-        self.font = load_font("Galmuri11.ttf", 16)
+    def get_requirement_text(self):
+        """요구사항을 텍스트로 반환"""
+        if self.quest_type == 0:  # 코인으로 이것 좀 사겠니?
+            return f"요구: 코인 {self.requirement}개"
+        elif self.quest_type == 1:  # 나에게 음식 좀 줄 수 있니?
+            return f"요구: 음식 {self.requirement}개"
+        elif self.quest_type == 2:  # 이거랑 교환하지 않을래?
+            if self.requirement == 1:
+                return "요구: 속도 감소"
+            elif self.requirement == 2:
+                return "요구: 먹이 생성 시간 증가"
+            elif self.requirement == 3:
+                return "요구: 음식 다운그레이드"
+
+
+        elif self.quest_type == 3:  # 이걸 줄게!
+            return "요구: 없음"
+        return f"요구: {self.requirement}"
+
+    def get_reward_text(self):
+        """보상을 텍스트로 반환"""
+        if self.reward_type == 0:  # 코인을 주마
+            return f"보상: 코인 {self.reward}개"
+        elif self.reward_type == 1:  # 이거 먹으렴!
+            return f"보상: 음식 {self.reward}개"
+        elif self.reward_type == 2:  # 업그레이드를 해주마
+            return f"보상: {self.reward}업그레이드"
+        elif self.reward_type == 3:  # 유니콘이 되고 싶다고?
+            return "보상: 유니콘 변신!"
+        return f"보상: {self.reward_name}"
 
     def complete_quest(self):
         self.is_completed = True
-        # Farmer를 걸어 나가게 함
-        if self.farmer:
-            self.farmer.complete_quest()
         return f"Quest '{self.quest_name}' completed! Reward: {self.reward}"

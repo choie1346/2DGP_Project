@@ -62,7 +62,8 @@ def reset_world():
 
     farmer = Farmer()
     game_world.add_object(farmer, 1)
-    quest = Quest(farmer)
+    quest = Quest()
+    farmer.set_quest(quest)
 
     # speed_up = Interface("speed_up.png")
     # speed_up.location(108, 108, 50, 50, 50, 50)
