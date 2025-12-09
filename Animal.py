@@ -3,7 +3,7 @@ from pico2d import load_image, draw_rectangle, load_font
 import common
 from state_machine import StateMachine
 import game_world
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n, SDLK_e
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n, SDLK_e, SDLK_q
 from Food import Food
 from random import randint
 
@@ -58,6 +58,8 @@ def key_n(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_n
 def key_e(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_e
+def key_q(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_q
 
 def up_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
@@ -85,6 +87,11 @@ class run:
         # E키 눌렀을 때 퀘스트 완료 시도
         if key_e(e):
             self.animal.try_complete_quest()
+            return
+
+        # Q키 눌렀을 때 퀘스트 거절
+        if key_q(e):
+            self.animal.try_reject_quest()
             return
 
         # 키 누름 - 해당 방향의 상태만 업데이트
@@ -183,7 +190,7 @@ class Animal:
         self.state_machine = StateMachine(
             self.RUN,  # initial state
             {
-                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN, key_n: self.RUN, key_e: self.RUN,
+                self.RUN: {up_down: self.RUN, down_down: self.RUN, left_down: self.RUN, right_down: self.RUN, key_n: self.RUN, key_e: self.RUN, key_q: self.RUN,
                            up_up: self.RUN, down_up: self.RUN, left_up: self.RUN, right_up: self.RUN}
             }
         )
@@ -268,6 +275,26 @@ class Animal:
             print("퀘스트 완료!")
         else:
             print("요구사항을 충족하지 못했습니다!")
+
+    def try_reject_quest(self):
+        print("try_reject_quest 호출됨!")
+
+        if not hasattr(self, 'colliding_farmer'):
+            print("colliding_farmer 속성이 없습니다!")
+            return
+
+        if self.colliding_farmer is None:
+            print("colliding_farmer가 None입니다!")
+            return
+
+        print(f"퀘스트 거절! Farmer 상태: {self.colliding_farmer.state}")
+
+        farmer = self.colliding_farmer
+        if farmer.state == 'idle':
+            # 농부를 걸어나가게 함 (보상 없이)
+            farmer.complete_quest()
+            self.colliding_farmer = None
+            print("퀘스트를 거절했습니다.")
 
     def EndGame(self):
         common.final_animal_level = self.current  # 게임 종료 시 현재 레벨 저장

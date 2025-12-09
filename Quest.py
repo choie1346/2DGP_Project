@@ -108,6 +108,9 @@ class Farmer:
                 # 말풍선 그리기
                 self.talking_box_image.clip_draw(0, 0, 47, 28, self.x, self.y + 150, 250, 180)
 
+                if self.can_complete:
+                    self.reward_image.clip_draw(0, 0, 32, 32, self.x + 80, self.y + 140, 40, 40)
+
                 # Quest 정보 텍스트 그리기
                 # 퀘스트 이름
                 quest_text = f"{self.quest.quest_name}"
@@ -120,10 +123,6 @@ class Farmer:
                 # 보상
                 reward_text = self.quest.get_reward_text()
                 self.font.draw(self.x - 110, self.y + 140, reward_text, (50, 100, 50))
-
-                if self.can_complete:
-                    self.reward_image.clip_draw(0, 0, 32, 32, self.x + 80, self.y + 140, 40, 40)
-
 
     def update(self):
         if self.state == 'walk_in':
@@ -224,7 +223,7 @@ class Quest:
             return f"요구: 음식 {self.requirement}개"
         elif self.quest_type == 2:  # 이거랑 교환하지 않을래?
             if self.requirement == 1:
-                return "요구: 속도 감소"
+                return "요구: 이동 속도 감소"
             elif self.requirement == 2:
                 return "요구: 먹이 생성 시간 증가"
             elif self.requirement == 3:
@@ -314,11 +313,7 @@ class Quest:
 
         elif self.reward_type == 3:  # 유니콘이 되고 싶다고?
             # 유니콘으로 변신 (동물의 current를 최대치로)
-            from Animal import Animal
-            animal = game_world.get_objects_by_type(Animal)
-            if animal:
-                animal[0].current = 8  # 유니콘은 인덱스 8
-                animal[0].image = load_image(f"Animals/Unicon/{['front', 'back', 'left', 'right'][animal[0].dir]}.png")
-            print("유니콘으로 변신!")
+            common.UNICON_UNLOCK = True
+            # print("유니콘으로 변신!")
 
         return f"Quest '{self.quest_name}' completed! Reward: {self.reward}"
