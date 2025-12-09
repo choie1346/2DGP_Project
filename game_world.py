@@ -1,5 +1,5 @@
 # 0 : start, 1 : in game
-world = [[], []]
+world = [[], [], []]
 
 # world object 추가
 def add_object(o, stage):

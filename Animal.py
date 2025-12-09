@@ -159,10 +159,10 @@ class Animal:
     def __init__(self):
         self.x, self.y = 400, 350
         self.route = 1
-        self.current = 0
+        self.current = 8
         self.frame = 0
         self.dir = 0
-        self.size = 200
+        self.size = 400
         self.speed = common.ANIMAL_SPEED  # 이동 속도
         self.velocity_x = 0  # X 방향 속도
         self.velocity_y = 0  # Y 방향 속도
@@ -176,6 +176,9 @@ class Animal:
         # 충돌 중인 farmer 저장
         self.colliding_farmer = None
 
+        # 초기 이미지 로드 (current와 dir에 맞춰서)
+        self.image = load_image(image_dirs[self.dir][self.current])
+
         self.RUN = run(self)
         self.state_machine = StateMachine(
             self.RUN,  # initial state
@@ -186,11 +189,14 @@ class Animal:
         )
 
     def grow(self):
-        self.current += 1
-        if self.current >= len(image_dirs[0]):
-            self.current = len(image_dirs[0]) - 1
+        if self.current == 3 or self.current == 8:
             # print('최대 성장 도달')
             return
+        self.current += 1
+        # if self.current >= len(image_dirs[0]):
+        #     self.current = len(image_dirs[0]) - 1
+        #     # print('최대 성장 도달')
+        #     return
         self.size = 200
         self.image = load_image(image_dirs[self.dir][self.current])
         # print(f'Animal grew to stage {animal.current}')
@@ -199,6 +205,10 @@ class Animal:
         self.state_machine.update()
         if self.speed != common.ANIMAL_SPEED:
             self.speed = common.ANIMAL_SPEED
+
+        if self.current == 3 or self.current == 8:
+            if self.size >= 500:
+                self.EndGame()
             # print(f'Animal speed updated: {self.speed}')
 
     def draw(self):
@@ -222,8 +232,12 @@ class Animal:
         if group == 'animal:food':
             food = game_world.get_one_object_by_type(Food)
             self.size += (food.current + 1)
-            if self.size >= common.GROW_ANIMAL_NUMBER[self.current] + 200:
-                self.grow()
+
+            # 최대 레벨(3 또는 8)이 아닐 때만 성장 체크
+            if self.current < len(common.GROW_ANIMAL_NUMBER) and self.current != 3 and self.current != 8:
+                if self.size >= common.GROW_ANIMAL_NUMBER[self.current] + 200:
+                    self.grow()
+
             if randint(0, 100) < common.COIN_SPAWN_PROBABILITY:
                 common.coin_number += 10
         elif group == 'animal:farmer':
@@ -254,3 +268,7 @@ class Animal:
             print("퀘스트 완료!")
         else:
             print("요구사항을 충족하지 못했습니다!")
+
+    def EndGame(self):
+        common.final_animal_level = self.current  # 게임 종료 시 현재 레벨 저장
+        common.change_stage(2)

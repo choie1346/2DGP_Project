@@ -173,3 +173,16 @@ class Background:
 
     def update(self):
         pass
+
+class EndGameUI:
+    def __init__(self):
+        self.font = load_font("Galmuri11.ttf", 50)
+
+    def draw(self):
+        if common.final_animal_level == 3:
+            self.font.draw(250, 350, "게임 종료! 축하합니다!", (255, 255, 0))
+        elif common.final_animal_level == 8:
+            self.font.draw(50, 350, "유니콘 달성! 닭의 꿈이 이루어졌습니다!", (255, 255, 0))
+
+    def update(self):
+        pass
