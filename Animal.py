@@ -280,7 +280,7 @@ class Animal:
                     self.grow()
 
             if randint(0, 100) < common.COIN_SPAWN_PROBABILITY:
-                common.coin_number += 20
+                common.coin_number += 50
         elif group == 'animal:farmer':
             print("Farmer와 충돌! colliding_farmer 저장")
             self.colliding_farmer = other
