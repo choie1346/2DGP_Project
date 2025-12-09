@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle
+from pico2d import load_image, draw_rectangle, load_font
 
 import common
 from state_machine import StateMachine
@@ -6,6 +6,7 @@ import game_world
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n
 from common import STAGE
 from Food import Food
+from Coin import CoinSpawner
 
 # 0-front, 1-back, 2-left, 3-right
 # route1 - 3까지, route2 - 4부터 8까지
@@ -205,4 +206,12 @@ class Animal:
             if self.size >= common.GROW_ANIMAL_NUMBER[self.current] + 200:
                 self.grow()
             print(f'size up: {self.size}')
+            coin_spawner = CoinSpawner(other)
+
+        elif group == 'animal:coin':
+            game_world.remove_object(other)
+            game_world.remove_collision_object(other)
+            common.coin_number += 10
+            print(f'코인 획득! 현재 코인: {common.coin_number}')
+
 

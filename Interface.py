@@ -83,19 +83,26 @@ class Interface:
 
     def draw(self):
         self.image.clip_draw(0, 0, self.origin_w, self.origin_h, self.x, self.y, self.w, self.h)
+        self.font.draw(940, 50, f'{common.coin_number}', (255,255,255))
         # 팝업이 있으면 그리기
         if self.popup_box is not None:
             self.popup_box.draw()
             # 팝업 위에 텍스트 그리기 (중앙 정렬)
             text = "Level " + str(self.level)
             text_width = len(text) * 8  # 폰트 크기 16의 경우 대략 절반 너비
-            self.font.draw(self.x - text_width // 2, self.y + 80, text, (255, 255, 255))
+            self.font.draw(self.x - text_width // 2, self.y + 90, text, (255, 255, 255))
+            text = str(common.LEVEL_UP_COST[self.level - 1])
+            self.font.draw(self.x - text_width // 2 + 20, self.y + 60, text, (255, 255, 255))
+
+            image = load_image("Items/coins/coin.png")
+            image.clip_draw(0, 0, 63, 54, self.x - text_width // 2 + 5, self.y + 60, 25, 25)
 
     def update(self):
         pass
 
     def handle_event(self, event):
         if event.type == SDL_MOUSEMOTION:
+            if self.info == "coinchest": return
             mouse_y = y_transformation(event.y)
             # 마우스가 인터페이스 위에 있는지 확인
             if (self.x - self.w / 2) <= event.x <= (self.x + self.w / 2) and (self.y - self.h / 2) <= mouse_y <= (self.y + self.h / 2):
@@ -117,24 +124,28 @@ class Interface:
             if (self.x - self.w / 2) <= event.x <= (self.x + self.w / 2) and (self.y - self.h / 2) <= mouse_y <= (self.y + self.h / 2):
                 if self.info == "speed_up":
                     if self.level >= 5: return
-                    self.level += 1
-                    print('동물 스피드 업')
+                    if common.coin_number >= common.LEVEL_UP_COST[self.level - 1]:
+                        common.coin_number -= common.LEVEL_UP_COST[self.level - 1]
+                        self.level += 1
+                        print('동물 스피드 업')
                 elif self.info == "food_upgrade":
                     if self.level >= 10: return
-                    self.level += 1
-                    common.food_level += 1
-                    print('음식 업그레이드')
-                    all_foods = game_world.get_objects_by_type(Food)
-                    for food in all_foods:
-                        food.upgrade()
+                    if common.coin_number >= common.LEVEL_UP_COST[self.level - 1]:
+                        common.coin_number -= common.LEVEL_UP_COST[self.level - 1]
+                        common.food_level += 1
+                        print('음식 업그레이드')
+                        all_foods = game_world.get_objects_by_type(Food)
+                        for food in all_foods:
+                            food.upgrade()
                 elif self.info == "food_spawn":
                     if self.level >= 5: return
-                    self.level += 1
-                    print('음식 생성 시간 단축')
-                    common.FOOD_MIN_CREATE_TIME -= 1.0
-                    common.FOOD_MAX_CREATE_TIME -= 1.0
-                    print(
-                        f'New FOOD_MIN_CREATE_TIME: {common.FOOD_MIN_CREATE_TIME}, FOOD_MAX_CREATE_TIME: {common.FOOD_MAX_CREATE_TIME}')
+                    if common.coin_number >= common.LEVEL_UP_COST[self.level - 1]:
+                        common.coin_number -= common.LEVEL_UP_COST[self.level - 1]
+                        print('음식 생성 시간 단축')
+                        common.FOOD_MIN_CREATE_TIME -= 1.0
+                        common.FOOD_MAX_CREATE_TIME -= 1.0
+                        print(
+                            f'New FOOD_MIN_CREATE_TIME: {common.FOOD_MIN_CREATE_TIME}, FOOD_MAX_CREATE_TIME: {common.FOOD_MAX_CREATE_TIME}')
 
 class Background:
     def __init__(self):

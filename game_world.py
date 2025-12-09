@@ -21,7 +21,7 @@ def remove_object(o):
             layer.remove(o)
             return
 
-    print('월드에 존재하지 않은 객체를 삭제하려고 합니다.')
+    print(f'월드에 존재하지 않은 객체{o}를 삭제하려고 합니다.')
 
 def collide(a, b):
     leftA, bottomA, rightA, topA = a.get_bb()
