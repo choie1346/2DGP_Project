@@ -127,13 +127,15 @@ class Interface:
                     if common.coin_number >= common.LEVEL_UP_COST[self.level - 1]:
                         common.coin_number -= common.LEVEL_UP_COST[self.level - 1]
                         self.level += 1
-                        print('동물 스피드 업')
+                        common.ANIMAL_SPEED += 1
+                        # print(f'New ANIMAL_SPEED: {common.ANIMAL_SPEED}')
+                        # print('동물 스피드 업')
                 elif self.info == "food_upgrade":
                     if self.level >= 10: return
                     if common.coin_number >= common.LEVEL_UP_COST[self.level - 1]:
                         common.coin_number -= common.LEVEL_UP_COST[self.level - 1]
                         common.food_level += 1
-                        print('음식 업그레이드')
+                        # print('음식 업그레이드')
                         all_foods = game_world.get_objects_by_type(Food)
                         for food in all_foods:
                             food.upgrade()
@@ -141,11 +143,10 @@ class Interface:
                     if self.level >= 5: return
                     if common.coin_number >= common.LEVEL_UP_COST[self.level - 1]:
                         common.coin_number -= common.LEVEL_UP_COST[self.level - 1]
-                        print('음식 생성 시간 단축')
+                        # print('음식 생성 시간 단축')
                         common.FOOD_MIN_CREATE_TIME -= 1.0
                         common.FOOD_MAX_CREATE_TIME -= 1.0
-                        print(
-                            f'New FOOD_MIN_CREATE_TIME: {common.FOOD_MIN_CREATE_TIME}, FOOD_MAX_CREATE_TIME: {common.FOOD_MAX_CREATE_TIME}')
+                        # print(f'New FOOD_MIN_CREATE_TIME: {common.FOOD_MIN_CREATE_TIME}, FOOD_MAX_CREATE_TIME: {common.FOOD_MAX_CREATE_TIME}')
 
 class Background:
     def __init__(self):

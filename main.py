@@ -16,7 +16,7 @@ def add_interface(path, info, origin_x, origin_y, box_w, box_h, draw_w, draw_h):
     interfaces.append(interface)
     interface.location(origin_x, origin_y, box_w, box_h, draw_w, draw_h)
     game_world.add_object(interface, 1)
-    print(f"Interface added: {info}, pos: ({box_w}, {box_h}), size: ({draw_w}, {draw_h})")
+    # print(f"Interface added: {info}, pos: ({box_w}, {box_h}), size: ({draw_w}, {draw_h})")
 
 
 def handle_events():

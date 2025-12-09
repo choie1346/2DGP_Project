@@ -4,7 +4,6 @@ import common
 from state_machine import StateMachine
 import game_world
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_LEFT, SDLK_n
-from common import STAGE
 from Food import Food
 from Coin import CoinSpawner
 
@@ -157,7 +156,7 @@ class Animal:
         self.frame = 0
         self.dir = 0
         self.size = 200
-        self.speed = 5  # 이동 속도
+        self.speed = common.ANIMAL_SPEED  # 이동 속도
         self.velocity_x = 0  # X 방향 속도
         self.velocity_y = 0  # Y 방향 속도
 
@@ -188,6 +187,9 @@ class Animal:
 
     def update(self):
         self.state_machine.update()
+        if self.speed != common.ANIMAL_SPEED:
+            self.speed = common.ANIMAL_SPEED
+            # print(f'Animal speed updated: {self.speed}')
 
     def draw(self):
         self.state_machine.draw()
@@ -205,13 +207,13 @@ class Animal:
             self.size += (food.current + 1)
             if self.size >= common.GROW_ANIMAL_NUMBER[self.current] + 200:
                 self.grow()
-            print(f'size up: {self.size}')
+            # print(f'size up: {self.size}')
             coin_spawner = CoinSpawner(other)
 
         elif group == 'animal:coin':
             game_world.remove_object(other)
             game_world.remove_collision_object(other)
             common.coin_number += 10
-            print(f'코인 획득! 현재 코인: {common.coin_number}')
+            # print(f'코인 획득! 현재 코인: {common.coin_number}')
 
 

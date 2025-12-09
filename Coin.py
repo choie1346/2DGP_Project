@@ -27,7 +27,7 @@ class CoinSpawner:
     def __init__(self, food):
         if common.STAGE == 1:
             rad = randint(0, 100)
-            print(f'Coin spawn probability: {rad:.2f}')
+            # print(f'Coin spawn probability: {rad:.2f}')
             if rad > common.COIN_SPAWN_PROBABILITY:
                 game_world.remove_object(self)
                 return
