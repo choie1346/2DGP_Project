@@ -12,8 +12,8 @@ quests = [
 
 rewards = [
     {"코인을 주마" : randint(100, 500)},
-    {"이거 먹으렴!" : randint(1, 3)},
-    {"업그레이드를 해주마" : randint(10, common.FOOD_MAX_NUMBER)},
+    {"이거 먹으렴!" : randint(10, common.FOOD_MAX_NUMBER)},
+    {"업그레이드를 해주마" : randint(1, 3)},
     {"유니콘이 되고 싶다고?" : 1}  # 키를 일치시킴
 ]
 
@@ -135,7 +135,6 @@ class Quest:
 
 
     def get_requirement_text(self):
-        """요구사항을 텍스트로 반환"""
         if self.quest_type == 0:  # 코인으로 이것 좀 사겠니?
             return f"요구: 코인 {self.requirement}개"
         elif self.quest_type == 1:  # 나에게 음식 좀 줄 수 있니?
@@ -148,19 +147,23 @@ class Quest:
             elif self.requirement == 3:
                 return "요구: 음식 다운그레이드"
 
-
         elif self.quest_type == 3:  # 이걸 줄게!
             return "요구: 없음"
         return f"요구: {self.requirement}"
 
     def get_reward_text(self):
-        """보상을 텍스트로 반환"""
         if self.reward_type == 0:  # 코인을 주마
             return f"보상: 코인 {self.reward}개"
         elif self.reward_type == 1:  # 이거 먹으렴!
             return f"보상: 음식 {self.reward}개"
         elif self.reward_type == 2:  # 업그레이드를 해주마
-            return f"보상: {self.reward}업그레이드"
+            if self.reward == 1:
+                return "보상: 속도 업그레이드"
+            elif self.reward == 2:
+                return "보상: 먹이 생성 시간 단축"
+            elif self.reward == 3:
+                return "보상: 음식 업그레이드"
+
         elif self.reward_type == 3:  # 유니콘이 되고 싶다고?
             return "보상: 유니콘 변신!"
         return f"보상: {self.reward_name}"

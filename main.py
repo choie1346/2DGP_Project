@@ -60,11 +60,6 @@ def reset_world():
     # stage == 1
     game_world.add_object(background, 1)
 
-    farmer = Farmer()
-    game_world.add_object(farmer, 1)
-    quest = Quest()
-    farmer.set_quest(quest)
-
     # speed_up = Interface("speed_up.png")
     # speed_up.location(108, 108, 50, 50, 50, 50)
     # game_world.add_object(speed_up, 1)
@@ -87,6 +82,11 @@ def reset_world():
     game_world.add_object(animal, 1)
 
     game_world.add_collision_pair('animal:food', animal, None)
+
+    farmer = Farmer()
+    game_world.add_object(farmer, 1)
+    quest = Quest()
+    farmer.set_quest(quest)
 
 
 def update_world():
