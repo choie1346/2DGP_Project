@@ -160,7 +160,6 @@ class Farmer:
             print(f'{self.x, self.y}')
 
     def can_complete_quest(self):
-        """퀘스트 완료 가능 여부 확인 (차감하지 않고 확인만)"""
         if self.quest is None:
             return False
 
@@ -176,11 +175,11 @@ class Farmer:
         elif self.quest.quest_type == 2:  # 이거랑 교환하지 않을래?
             # 디버프 요구사항 확인
             if self.quest.requirement == 1:
-                return common.speed_level > 0  # 속도 레벨이 0보다 커야 다운그레이드 가능
+                return common.speed_level > 1  # 속도 레벨이 0보다 커야 다운그레이드 가능
             elif self.quest.requirement == 2:
-                return common.food_spawn_level > 0  # 음식 생성 레벨이 0보다 커야 다운그레이드 가능
+                return common.food_spawn_level > 1  # 음식 생성 레벨이 0보다 커야 다운그레이드 가능
             elif self.quest.requirement == 3:
-                return common.food_upgrade_level > 0  # 음식 품질 레벨이 0보다 커야 다운그레이드 가능
+                return common.food_upgrade_level > 1  # 음식 품질 레벨이 0보다 커야 다운그레이드 가능
             return True
 
         elif self.quest.quest_type == 3:  # 이걸 줄게!
@@ -295,11 +294,23 @@ class Quest:
 
         elif self.reward_type == 2:  # 업그레이드를 해주마
             if self.reward == 1:
-                common.upgrade_speed()
+                # 속도 업그레이드 (최대 레벨 5)
+                if common.speed_level < 5:
+                    common.upgrade_speed()
+                else:
+                    print("속도가 이미 최대 레벨입니다!")
             elif self.reward == 2:
-                common.upgrade_food_spawn()
+                # 먹이 생성 시간 단축 (최대 레벨 5)
+                if common.food_spawn_level < 5:
+                    common.upgrade_food_spawn()
+                else:
+                    print("먹이 생성 시간이 이미 최대 레벨입니다!")
             elif self.reward == 3:
-                common.upgrade_food_quality()
+                # 음식 업그레이드 (최대 레벨 10)
+                if common.food_upgrade_level < 10:
+                    common.upgrade_food_quality()
+                else:
+                    print("음식 품질이 이미 최대 레벨입니다!")
 
         elif self.reward_type == 3:  # 유니콘이 되고 싶다고?
             # 유니콘으로 변신 (동물의 current를 최대치로)
